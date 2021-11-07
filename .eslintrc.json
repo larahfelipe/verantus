@@ -2,22 +2,19 @@
   "env": {
     "browser": true,
     "es2020": true,
-    "jest": true,
     "node": true
-  },
-  "settings": {
-    "react": {
-      "version": "detect"
-    }
   },
   "extends": [
     "eslint:recommended",
+    "plugin:vue/base",
+    "plugin:vue/vue3-recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:prettier/recommended"
   ],
-  "parser": "@typescript-eslint/parser",
+  "parser": "vue-eslint-parser",
   "parserOptions": {
+    "parser": "@typescript-eslint/parser",
     "ecmaFeatures": {
       "jsx": true
     },

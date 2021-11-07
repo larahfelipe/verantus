@@ -7,6 +7,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+
 import { mapGetters } from 'vuex';
 
 import { QuoteOverview } from '@/types';

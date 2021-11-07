@@ -1,8 +1,10 @@
 <template>
   <div class="logo-wrapper">
-    <div class="logo">
-      <em>v&#8209;stocks</em>
-    </div>
+    <a href="/">
+      <div class="logo">
+        <em>v&#8209;stocks</em>
+      </div>
+    </a>
   </div>
 </template>
 
@@ -22,5 +24,7 @@
 
   color: #353a45;
   background: #00ff80;
+
+  cursor: pointer;
 }
 </style>

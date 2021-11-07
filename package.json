@@ -8,13 +8,14 @@
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "serve": "vite preview",
-    "lint": "eslint src --ext vue,ts --max-warnings=0",
-    "lint:fix": "eslint src --ext vue,ts --max-warnings=0 --fix",
+    "lint": "eslint src --ext .vue,.ts --max-warnings=0",
+    "lint:fix": "eslint src --ext .vue,.ts --max-warnings=0 --fix",
     "prettier": "prettier --check \"src/**/*.{vue,ts}\"",
     "prettier:fix": "prettier --check \"src/**/*.{vue,ts}\" --write",
     "typecheck": "tsc --project tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@quasar/extras": "^1.11.5",
     "axios": "^0.24.0",
     "quasar": "^2.3.0",
     "vue": "^3.2.16",
@@ -30,10 +31,12 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import-helpers": "^1.1.0",
     "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-vue": "^8.0.3",
     "prettier": "^2.4.1",
     "sass": "1.32.0",
     "typescript": "^4.4.3",
     "vite": "^2.6.4",
+    "vue-eslint-parser": "^8.0.1",
     "vue-tsc": "^0.3.0"
   }
 }

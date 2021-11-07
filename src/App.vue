@@ -27,6 +27,11 @@ export default defineComponent({
   font-family: 'Roboto Slab', sans-serif;
 }
 
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
 .app-wrapper {
   width: 100vw;
   height: 100vh;

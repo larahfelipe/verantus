@@ -1,18 +1,18 @@
 <template>
   <div class="side-divider">
-    <Logo />
+    <TheLogo />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-import Logo from '@/components/layout/Logo.vue';
+import TheLogo from '@/components/layout/TheLogo.vue';
 
 export default defineComponent({
   name: 'BaseSideMenu',
   components: {
-    Logo
+    TheLogo
   }
 });
 </script>
