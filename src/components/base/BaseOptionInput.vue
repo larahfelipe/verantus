@@ -5,13 +5,16 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
+import { ComponentProps } from '@/types';
+
 export default defineComponent({
   name: 'BaseOptionInput',
   props: {
     options: {
       type: Array,
-      required: true
-    }
+      required: true,
+      default: () => []
+    } as ComponentProps
   },
   emits: ['select-event'],
   data() {

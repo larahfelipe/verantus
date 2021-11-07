@@ -1,5 +1,11 @@
 import { ActionContext } from 'vuex';
 
+export type ComponentProps = {
+  type: any;
+  required?: boolean;
+  default: any;
+};
+
 export type Payload = {
   stockSymbol: string;
   stockExchange: string;
