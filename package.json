@@ -1,0 +1,39 @@
+{
+  "name": "v-stocks",
+  "version": "0.0.0",
+  "author": "larafe1",
+  "license": "MIT",
+  "repository": "https://github.com/larafe1/v-stocks.git",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "serve": "vite preview",
+    "lint": "eslint src --ext vue,ts --max-warnings=0",
+    "lint:fix": "eslint src --ext vue,ts --max-warnings=0 --fix",
+    "prettier": "prettier --check \"src/**/*.{vue,ts}\"",
+    "prettier:fix": "prettier --check \"src/**/*.{vue,ts}\" --write",
+    "typecheck": "tsc --project tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "axios": "^0.24.0",
+    "quasar": "^2.3.0",
+    "vue": "^3.2.16",
+    "vuex": "^4.0.2"
+  },
+  "devDependencies": {
+    "@quasar/vite-plugin": "^1.0.2",
+    "@types/node": "^16.11.6",
+    "@typescript-eslint/eslint-plugin": "^5.3.0",
+    "@typescript-eslint/parser": "^5.3.0",
+    "@vitejs/plugin-vue": "^1.9.3",
+    "eslint": "^8.2.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import-helpers": "^1.1.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.4.1",
+    "sass": "1.32.0",
+    "typescript": "^4.4.3",
+    "vite": "^2.6.4",
+    "vue-tsc": "^0.3.0"
+  }
+}
