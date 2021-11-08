@@ -19,6 +19,13 @@ export default defineComponent({
     BaseSideMenu,
     BaseQuoteOverviewHeader,
     BaseQuoteOverviewBody
+  },
+  created() {
+    this.$store.dispatch('overview/fetchQuoteOverview', {
+      stockSymbol: 'AAPL',
+      stockExchange: '',
+      modules: 'assetProfile,quoteType'
+    });
   }
 });
 </script>
@@ -26,6 +33,8 @@ export default defineComponent({
 <style scoped>
 .quote-wrapper {
   display: grid;
-  grid-template-rows: 1fr 3fr;
+  grid-template-rows: 1fr 9fr;
+
+  overflow: hidden;
 }
 </style>

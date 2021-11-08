@@ -1,18 +1,16 @@
 <template>
-  <div class="app-wrapper">
-    <QuoteOverviewTemplate />
-  </div>
+  <MainPage />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-import QuoteOverviewTemplate from '@/components/templates/QuoteOverviewTemplate.vue';
+import MainPage from '@/pages/MainPage.vue';
 
 export default defineComponent({
   name: 'App',
   components: {
-    QuoteOverviewTemplate
+    MainPage
   }
 });
 </script>
@@ -27,16 +25,12 @@ export default defineComponent({
   font-family: 'Roboto Slab', sans-serif;
 }
 
+body {
+  color: #353a45;
+}
+
 a {
   text-decoration: none;
   color: inherit;
-}
-
-.app-wrapper {
-  width: 100vw;
-  height: 100vh;
-
-  display: grid;
-  grid-template-columns: 1fr 4fr;
 }
 </style>

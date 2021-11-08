@@ -30,6 +30,16 @@ export type QuoteOverview = {
           sector: string;
           longBusinessSummary: string;
         };
+        quoteType: {
+          exchange: string;
+          longName: string;
+          quoteType: string;
+          shortName: string;
+          symbol: string;
+          timeZoneFullName: string;
+          timeZoneShortName: string;
+          uuid: string;
+        };
         defaultKeyStatistics: {
           enterpriseValue: QuoteDefaultKeyStatisticsProps;
           forwardPE: QuoteDefaultKeyStatisticsProps;

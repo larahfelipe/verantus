@@ -22,7 +22,7 @@
   font-size: 64px;
   font-weight: bold;
 
-  color: #353a45;
+  color: inherit;
   background: #00ff80;
 
   cursor: pointer;

@@ -23,6 +23,6 @@ export default defineComponent({
   height: 100%;
 
   border-right: 1px solid #e7e7e7;
-  background-color: #f0f2f7;
+  background: #f0f2f7;
 }
 </style>
