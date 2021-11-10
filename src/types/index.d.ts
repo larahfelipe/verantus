@@ -12,7 +12,7 @@ export type Payload = {
   modules: string;
 };
 
-type QuoteDefaultKeyStatisticsProps = {
+type QuoteStatisticsProps = {
   raw: number;
   fmt: string;
   longFmt?: string;
@@ -41,19 +41,33 @@ export type QuoteOverview = {
           uuid: string;
         };
         defaultKeyStatistics: {
-          enterpriseValue: QuoteDefaultKeyStatisticsProps;
-          forwardPE: QuoteDefaultKeyStatisticsProps;
-          profitMargins: QuoteDefaultKeyStatisticsProps;
-          floatShares: QuoteDefaultKeyStatisticsProps;
-          sharesOutstanding: QuoteDefaultKeyStatisticsProps;
-          bookValue: QuoteDefaultKeyStatisticsProps;
-          priceToBook: QuoteDefaultKeyStatisticsProps;
-          netIncomeToCommon: QuoteDefaultKeyStatisticsProps;
-          trailingEps: QuoteDefaultKeyStatisticsProps;
-          pegRatio: QuoteDefaultKeyStatisticsProps;
-          enterpriseToRevenue: QuoteDefaultKeyStatisticsProps;
-          enterpriseToEbitda: QuoteDefaultKeyStatisticsProps;
-          lastDividendValue: QuoteDefaultKeyStatisticsProps;
+          '52WeekChange': QuoteStatisticsProps;
+          enterpriseValue: QuoteStatisticsProps;
+          forwardPE: QuoteStatisticsProps;
+          profitMargins: QuoteStatisticsProps;
+          floatShares: QuoteStatisticsProps;
+          sharesOutstanding: QuoteStatisticsProps;
+          bookValue: QuoteStatisticsProps;
+          priceToBook: QuoteStatisticsProps;
+          netIncomeToCommon: QuoteStatisticsProps;
+          trailingEps: QuoteStatisticsProps;
+          pegRatio: QuoteStatisticsProps;
+          enterpriseToRevenue: QuoteStatisticsProps;
+          enterpriseToEbitda: QuoteStatisticsProps;
+          lastDividendValue: QuoteStatisticsProps;
+          lastSplitDate: QuoteStatisticsProps;
+          lastSplitFactor: string | number;
+        };
+        financialData: {
+          financialCurrency: string;
+          currentPrice: QuoteStatisticsProps;
+          ebitda: QuoteStatisticsProps;
+          totalRevenue: QuoteStatisticsProps;
+          revenueGrowth: QuoteStatisticsProps;
+          revenuePerShare: QuoteStatisticsProps;
+          returnOnAssets: QuoteStatisticsProps;
+          returnOnEquity: QuoteStatisticsProps;
+          grossProfits: QuoteStatisticsProps;
         };
       }
     ];

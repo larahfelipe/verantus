@@ -24,7 +24,7 @@ export default defineComponent({
     this.$store.dispatch('overview/fetchQuoteOverview', {
       stockSymbol: 'AAPL',
       stockExchange: '',
-      modules: 'assetProfile,quoteType'
+      modules: 'assetProfile,quoteType,defaultKeyStatistics,financialData'
     });
   }
 });

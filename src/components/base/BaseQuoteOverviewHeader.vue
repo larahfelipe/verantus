@@ -46,7 +46,7 @@ export default defineComponent({
     return {
       stockSymbol: '',
       stockExchange: '',
-      modules: 'assetProfile,quoteType',
+      modules: 'assetProfile,quoteType,defaultKeyStatistics,financialData',
       options: [
         {
           label: 'US Stock',
