@@ -15,7 +15,7 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'BaseInputField',
+  name: 'SearchInputField',
   props: {
     label: {
       type: String,

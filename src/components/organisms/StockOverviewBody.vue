@@ -62,103 +62,104 @@
             <p>{{ quoteOverview.assetProfile.longBusinessSummary }}</p>
           </div>
         </q-tab-panel>
+
         <q-tab-panel name="chart">
           <p>Graph</p>
         </q-tab-panel>
+
         <q-tab-panel name="statistics">
           <div class="statistics-wrapper">
             <div class="statistics-left-box">
               <h5 class="statistics-section-title">Valuation Measures</h5>
-              <BaseStatisticsItem
+              <StatisticsItem
                 long-label="Price to Book"
                 short-label="(P/B)"
                 :value="quoteOverview.defaultKeyStatistics.priceToBook.fmt"
               />
-              <BaseStatisticsItem
+              <StatisticsItem
                 long-label="Enterprise Value"
                 short-label="(EV)"
                 :value="quoteOverview.defaultKeyStatistics.enterpriseValue.fmt"
               />
-              <BaseStatisticsItem
+              <StatisticsItem
                 long-label="Forward Price to Earnings"
                 short-label="(P/E)"
                 :value="quoteOverview.defaultKeyStatistics.forwardPE.fmt"
               />
-              <BaseStatisticsItem
+              <StatisticsItem
                 long-label="Price to Book"
                 short-label="(P/B)"
                 :value="quoteOverview.defaultKeyStatistics.priceToBook.fmt"
               />
-              <BaseStatisticsItem
+              <StatisticsItem
                 long-label="Enterprise Value to Revenue"
                 short-label="(EV/Revenue)"
                 :value="
                   quoteOverview.defaultKeyStatistics.enterpriseToRevenue.fmt
                 "
               />
-              <BaseStatisticsItem
+              <StatisticsItem
                 long-label="Enterprise Value to EBITDA"
                 short-label="(EV/EBITDA)"
                 :value="
                   quoteOverview.defaultKeyStatistics.enterpriseToEbitda.fmt
                 "
               />
-
               <h5 class="statistics-section-title">Management Effectiveness</h5>
-              <BaseStatisticsItem
+              <StatisticsItem
                 long-label="Return on Assets"
                 short-label="TTM"
                 :value="quoteOverview.financialData.returnOnAssets.fmt"
               />
-              <BaseStatisticsItem
+              <StatisticsItem
                 long-label="Return on Equity"
                 short-label="TTM"
                 :value="quoteOverview.financialData.returnOnEquity.fmt"
               />
             </div>
+
             <div class="statistics-right-box">
               <h5 class="statistics-section-title">Income Statement</h5>
-              <BaseStatisticsItem
+              <StatisticsItem
                 long-label="Revenue"
                 short-label="TTM"
                 :value="quoteOverview.financialData.totalRevenue.fmt"
               />
-              <BaseStatisticsItem
+              <StatisticsItem
                 long-label="Revenue Per Share"
                 short-label="TTM"
                 :value="quoteOverview.financialData.revenuePerShare.fmt"
               />
-              <BaseStatisticsItem
+              <StatisticsItem
                 long-label="Quarterly Revenue Growth"
                 short-label="YOY"
                 :value="quoteOverview.financialData.revenueGrowth.fmt"
               />
-              <BaseStatisticsItem
+              <StatisticsItem
                 long-label="Gross Profit"
                 short-label="TTM"
                 :value="quoteOverview.financialData.grossProfits.fmt"
               />
-              <BaseStatisticsItem
+              <StatisticsItem
                 long-label="EBITDA"
                 short-label="TTM"
                 :value="quoteOverview.financialData.ebitda.fmt"
               />
-              <BaseStatisticsItem
+              <StatisticsItem
                 long-label="Net Income to Common"
                 short-label="TTM"
                 :value="
                   quoteOverview.defaultKeyStatistics.netIncomeToCommon.fmt
                 "
               />
-
               <h5 class="statistics-section-title">Dividends &amp; Splits</h5>
-              <BaseStatisticsItem
+              <StatisticsItem
                 long-label="Last Dividend Value"
                 :value="
                   quoteOverview.defaultKeyStatistics.lastDividendValue.fmt
                 "
               />
-              <BaseStatisticsItem
+              <StatisticsItem
                 long-label="Last Split Factor"
                 :value="
                   quoteOverview.defaultKeyStatistics.lastSplitFactor.toString()
@@ -177,14 +178,13 @@ import { defineComponent } from 'vue';
 
 import { mapGetters } from 'vuex';
 
+import StatisticsItem from '@/components/molecules/StatisticsItem.vue';
 import { QuoteOverview } from '@/types';
 
-import BaseStatisticsItem from './BaseStatisticsItem.vue';
-
 export default defineComponent({
-  name: 'BaseQuoteOverviewBody',
+  name: 'StockOverviewBody',
   components: {
-    BaseStatisticsItem
+    StatisticsItem
   },
   data() {
     return {

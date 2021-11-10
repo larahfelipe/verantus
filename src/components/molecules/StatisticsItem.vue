@@ -12,7 +12,7 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'BaseStatisticsItem',
+  name: 'StatisticsItem',
   props: {
     longLabel: {
       type: String,

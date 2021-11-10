@@ -1,5 +1,5 @@
 <template>
-  <div class="side-divider">
+  <div class="side-menu-wrapper">
     <TheLogo />
   </div>
 </template>
@@ -7,10 +7,10 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-import TheLogo from '@/components/layout/TheLogo.vue';
+import TheLogo from '@/components/molecules/TheLogo.vue';
 
 export default defineComponent({
-  name: 'BaseSideMenu',
+  name: 'SideMenu',
   components: {
     TheLogo
   }
@@ -18,7 +18,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.side-divider {
+.side-menu-wrapper {
   width: 25rem;
   height: 100%;
 

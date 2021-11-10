@@ -1,28 +1,16 @@
 <template>
-  <div class="app-wrapper">
-    <QuoteOverviewTemplate />
-  </div>
+  <StockOverviewTemplate />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-import QuoteOverviewTemplate from '@/components/templates/QuoteOverviewTemplate.vue';
+import StockOverviewTemplate from '@/components/templates/StockOverviewTemplate.vue';
 
 export default defineComponent({
   name: 'MainPage',
   components: {
-    QuoteOverviewTemplate
+    StockOverviewTemplate
   }
 });
 </script>
-
-<style scoped>
-.app-wrapper {
-  width: 100vw;
-  height: 100vh;
-
-  display: grid;
-  grid-template-columns: 1fr 4fr;
-}
-</style>

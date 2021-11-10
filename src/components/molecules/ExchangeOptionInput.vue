@@ -8,7 +8,7 @@ import { defineComponent } from 'vue';
 import { ComponentProps } from '@/types';
 
 export default defineComponent({
-  name: 'BaseOptionInput',
+  name: 'ExchangeOptionInput',
   props: {
     options: {
       type: Array,

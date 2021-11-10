@@ -1,7 +1,7 @@
 <template>
   <div class="header-wrapper">
     <div class="input-wrapper">
-      <BaseInputField
+      <SearchInputField
         outlined
         square
         :input-style="{ width: '550px' }"
@@ -10,7 +10,7 @@
         @change-event="handleEnteredValue"
       />
       <div class="option-wrapper">
-        <BaseOptionInput
+        <ExchangeOptionInput
           inline
           :options="options"
           @select-event="handleSelectOption"
@@ -31,16 +31,15 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
+import ExchangeOptionInput from '@/components/molecules/ExchangeOptionInput.vue';
+import SearchInputField from '@/components/molecules/SearchInputField.vue';
 import { Payload } from '@/types';
 
-import BaseInputField from './BaseInputField.vue';
-import BaseOptionInput from './BaseOptionInput.vue';
-
 export default defineComponent({
-  name: 'BaseQuoteOverviewHeader',
+  name: 'StockOverviewHeader',
   components: {
-    BaseInputField,
-    BaseOptionInput
+    SearchInputField,
+    ExchangeOptionInput
   },
   data() {
     return {
