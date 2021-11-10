@@ -160,7 +160,9 @@
               />
               <BaseStatisticsItem
                 long-label="Last Split Factor"
-                :value="quoteOverview.defaultKeyStatistics.lastSplitFactor"
+                :value="
+                  quoteOverview.defaultKeyStatistics.lastSplitFactor.toString()
+                "
               />
             </div>
           </div>

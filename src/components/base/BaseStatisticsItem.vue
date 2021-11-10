@@ -23,7 +23,7 @@ export default defineComponent({
       default: ''
     },
     value: {
-      type: String || Number,
+      type: String,
       required: true
     }
   },
