@@ -19,10 +19,12 @@ export default defineComponent({
   props: {
     label: {
       type: String,
+      required: false,
       default: ''
     },
     loading: {
       type: Boolean,
+      required: false,
       default: false
     }
   },

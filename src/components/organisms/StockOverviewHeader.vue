@@ -23,7 +23,7 @@
       color="green-6"
       icon="search"
       padding="md xl"
-      @click="handleFetchQuoteOverview"
+      @click="handleFetchStockOverview"
     />
   </div>
 </template>
@@ -70,14 +70,14 @@ export default defineComponent({
     handleSelectOption(value: string) {
       this.stockExchange = value;
     },
-    handleFetchQuoteOverview() {
+    handleFetchStockOverview() {
       const payload = {
         stockSymbol: this.stockSymbol,
         stockExchange: this.stockExchange,
         modules: this.modules
       } as Payload;
 
-      this.$store.dispatch('overview/fetchQuoteOverview', payload);
+      this.$store.dispatch('overview/fetchStockOverview', payload);
     }
   }
 });

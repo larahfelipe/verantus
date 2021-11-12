@@ -1,4 +1,4 @@
-import { QuoteOverviewGetters } from '@/types';
+import { StockOverviewGetters } from '@/types';
 
 export default {
   isLoading(state) {
@@ -10,7 +10,7 @@ export default {
   error(state) {
     return state.error;
   },
-  quoteOverview(state) {
-    return state.quoteOverview;
+  stockOverview(state) {
+    return state.stockOverview;
   }
-} as QuoteOverviewGetters;
+} as StockOverviewGetters;

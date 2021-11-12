@@ -20,6 +20,7 @@ export default defineComponent({
     },
     shortLabel: {
       type: String,
+      required: false,
       default: ''
     },
     value: {

@@ -9,7 +9,7 @@ export default {
       isLoading: false,
       isFetched: false,
       error: null,
-      quoteOverview: null
+      stockOverview: null
     };
   },
   getters,

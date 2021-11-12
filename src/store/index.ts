@@ -1,10 +1,10 @@
 import { createStore } from 'vuex';
 
-import quoteOverviewModule from './modules/QuoteOverview';
+import stockOverviewModule from './modules/StockOverview';
 
 const store = createStore({
   modules: {
-    overview: quoteOverviewModule
+    overview: stockOverviewModule
   }
 });
 

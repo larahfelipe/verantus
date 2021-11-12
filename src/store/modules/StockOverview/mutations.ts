@@ -1,4 +1,4 @@
-import { QuoteOverviewMutations } from '@/types';
+import { StockOverviewMutations } from '@/types';
 
 export default {
   setIsLoading(state, payload) {
@@ -10,7 +10,7 @@ export default {
   setError(state, payload) {
     state.error = payload;
   },
-  setQuoteOverview(state, payload) {
-    state.quoteOverview = payload;
+  setStockOverview(state, payload) {
+    state.stockOverview = payload;
   }
-} as QuoteOverviewMutations;
+} as StockOverviewMutations;

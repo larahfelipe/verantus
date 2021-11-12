@@ -1,10 +1,10 @@
 import { AxiosResponse } from 'axios';
 
 import api from '@/services/ApiService';
-import { QuoteOverview, QuoteOverviewActions } from '@/types';
+import { StockOverview, StockOverviewActions } from '@/types';
 
 export default {
-  async fetchQuoteOverview(context, payload) {
+  async fetchStockOverview(context, payload) {
     const { stockSymbol, stockExchange, modules } = payload;
     if (stockSymbol === '' || modules === '')
       return console.log('Payload is required.');
@@ -15,16 +15,17 @@ export default {
       const parsedSymbol = stockSymbol + stockExchange;
       const queryUrl = `/v11/finance/quoteSummary/${parsedSymbol}?modules=${modules}`;
 
-      const { status, data }: AxiosResponse<QuoteOverview> = await api.get(
+      const { status, data }: AxiosResponse<StockOverview> = await api.get(
         queryUrl
       );
-      if (status !== 200) throw new Error('Failed to fetch quote overview.');
+      if (status !== 200)
+        throw new Error('Some error occured while fetching stock overview.');
 
-      context.commit('setQuoteOverview', data);
+      context.commit('setStockOverview', data);
       context.commit('setIsLoading', false);
       context.commit('setIsFetched', true);
     } catch (err) {
       context.commit('setError', err);
     }
   }
-} as QuoteOverviewActions;
+} as StockOverviewActions;

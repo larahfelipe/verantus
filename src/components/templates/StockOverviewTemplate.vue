@@ -23,7 +23,7 @@ export default defineComponent({
     StockOverviewBody
   },
   created() {
-    this.$store.dispatch('overview/fetchQuoteOverview', {
+    this.$store.dispatch('overview/fetchStockOverview', {
       stockSymbol: 'AAPL',
       stockExchange: '',
       modules: 'assetProfile,quoteType,defaultKeyStatistics,financialData'

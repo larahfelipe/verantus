@@ -1,9 +1,33 @@
+import { PropType } from 'vue';
+
 import { ActionContext } from 'vuex';
 
-export type ComponentProps = {
-  type: any;
-  required?: boolean;
-  default: any;
+type ComponentProps<T = unknown> = {
+  type: PropType<T>;
+  required: boolean;
+  default: unknown;
+};
+
+export type SearchInputFieldProps = {
+  label: ComponentProps<string>;
+  loading: ComponentProps<boolean>;
+};
+
+export type ExchangeOptionInputProps = {
+  options: ComponentProps<string[]>;
+};
+
+export type SkeletonLoaderProps = {
+  type: ComponentProps<string | string[]>;
+  width: ComponentProps<string | string[]>;
+  height: ComponentProps<string | string[]>;
+  repeat: ComponentProps<boolean>;
+};
+
+export type StatisticsItemProps = {
+  longLabel: ComponentProps<string>;
+  shortLabel: ComponentProps<string>;
+  value: ComponentProps<string>;
 };
 
 export type Payload = {
@@ -12,13 +36,13 @@ export type Payload = {
   modules: string;
 };
 
-type QuoteStatisticsProps = {
+type StockStatisticsProps = {
   raw: number;
   fmt: string;
   longFmt?: string;
 };
 
-export type QuoteOverview = {
+export type StockOverview = {
   quoteSummary: {
     result: [
       {
@@ -41,63 +65,63 @@ export type QuoteOverview = {
           uuid: string;
         };
         defaultKeyStatistics: {
-          '52WeekChange': QuoteStatisticsProps;
-          enterpriseValue: QuoteStatisticsProps;
-          forwardPE: QuoteStatisticsProps;
-          profitMargins: QuoteStatisticsProps;
-          floatShares: QuoteStatisticsProps;
-          sharesOutstanding: QuoteStatisticsProps;
-          bookValue: QuoteStatisticsProps;
-          priceToBook: QuoteStatisticsProps;
-          netIncomeToCommon: QuoteStatisticsProps;
-          trailingEps: QuoteStatisticsProps;
-          pegRatio: QuoteStatisticsProps;
-          enterpriseToRevenue: QuoteStatisticsProps;
-          enterpriseToEbitda: QuoteStatisticsProps;
-          lastDividendValue: QuoteStatisticsProps;
-          lastSplitDate: QuoteStatisticsProps;
+          '52WeekChange': StockStatisticsProps;
+          enterpriseValue: StockStatisticsProps;
+          forwardPE: StockStatisticsProps;
+          profitMargins: StockStatisticsProps;
+          floatShares: StockStatisticsProps;
+          sharesOutstanding: StockStatisticsProps;
+          bookValue: StockStatisticsProps;
+          priceToBook: StockStatisticsProps;
+          netIncomeToCommon: StockStatisticsProps;
+          trailingEps: StockStatisticsProps;
+          pegRatio: StockStatisticsProps;
+          enterpriseToRevenue: StockStatisticsProps;
+          enterpriseToEbitda: StockStatisticsProps;
+          lastDividendValue: StockStatisticsProps;
+          lastSplitDate: StockStatisticsProps;
           lastSplitFactor: string | number;
         };
         financialData: {
           financialCurrency: string;
-          currentPrice: QuoteStatisticsProps;
-          ebitda: QuoteStatisticsProps;
-          totalRevenue: QuoteStatisticsProps;
-          revenueGrowth: QuoteStatisticsProps;
-          revenuePerShare: QuoteStatisticsProps;
-          returnOnAssets: QuoteStatisticsProps;
-          returnOnEquity: QuoteStatisticsProps;
-          grossProfits: QuoteStatisticsProps;
+          currentPrice: StockStatisticsProps;
+          ebitda: StockStatisticsProps;
+          totalRevenue: StockStatisticsProps;
+          revenueGrowth: StockStatisticsProps;
+          revenuePerShare: StockStatisticsProps;
+          returnOnAssets: StockStatisticsProps;
+          returnOnEquity: StockStatisticsProps;
+          grossProfits: StockStatisticsProps;
         };
       }
     ];
   };
 };
 
-export type QuoteOverviewState = {
+export type StockOverviewState = {
   isLoading: boolean;
   isFetched: boolean;
   error: any;
-  quoteOverview: QuoteOverview;
+  stockOverview: StockOverview;
 };
 
-export type QuoteOverviewGetters = {
-  isLoading: (state: QuoteOverviewState) => boolean;
-  isFetched: (state: QuoteOverviewState) => boolean;
-  error: (state: QuoteOverviewState) => any;
-  quoteOverview: (state: QuoteOverviewState) => QuoteOverview;
+export type StockOverviewGetters = {
+  isLoading: (state: StockOverviewState) => boolean;
+  isFetched: (state: StockOverviewState) => boolean;
+  error: (state: StockOverviewState) => any;
+  stockOverview: (state: StockOverviewState) => StockOverview;
 };
 
-export type QuoteOverviewMutations = {
-  setIsLoading: (state: QuoteOverviewState, payload: boolean) => void;
-  setIsFetched: (state: QuoteOverviewState, payload: boolean) => void;
-  setError: (state: QuoteOverviewState, payload: boolean) => void;
-  setQuoteOverview: (state: QuoteOverviewState, payload: QuoteOverview) => void;
+export type StockOverviewMutations = {
+  setIsLoading: (state: StockOverviewState, payload: boolean) => void;
+  setIsFetched: (state: StockOverviewState, payload: boolean) => void;
+  setError: (state: StockOverviewState, payload: boolean) => void;
+  setStockOverview: (state: StockOverviewState, payload: StockOverview) => void;
 };
 
-export type QuoteOverviewActions = {
-  fetchQuoteOverview: (
-    context: ActionContext<QuoteOverview, unknown>,
+export type StockOverviewActions = {
+  fetchStockOverview: (
+    context: ActionContext<StockOverview, unknown>,
     payload: Payload
   ) => void;
 };

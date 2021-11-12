@@ -1,19 +1,24 @@
 <template>
   <div class="body-wrapper">
     <div v-if="!isFetched" class="title-skeleton-wrapper">
-      <div class="title-main-skeleton-wrapper">
-        <q-skeleton type="QInput" width="700px" />
-        <q-skeleton type="text" width="300px" height="80px" />
-      </div>
-      <div class="title-minor-skeleton-wrapper">
-        <q-skeleton type="text" width="300px" height="60px" />
-        <q-skeleton type="text" width="400px" height="60px" />
-        <q-skeleton type="text" width="300px" height="50px" />
-      </div>
+      <SkeletonLoader
+        repeat
+        :type="['QInput', 'text']"
+        :width="['700px', '300px']"
+        :height="['80px', '80px']"
+        class="title-main-skeleton-wrapper"
+      />
+      <SkeletonLoader
+        repeat
+        :type="['text', 'text', 'text']"
+        :width="['300px', '250px', '350px']"
+        :height="['60px', '80px', '50px']"
+        class="title-minor-skeleton-wrapper"
+      />
     </div>
     <div v-else class="title-wrapper">
       <div class="title-main">
-        <h2>{{ quoteOverview.quoteType.longName }}</h2>
+        <h2>{{ stockOverview.quoteType.longName }}</h2>
         <h4>
           <em>{{ companySymbol }}</em>
         </h4>
@@ -22,22 +27,26 @@
         <div class="title-minor">
           <h5>Stock Price</h5>
           <h4>
-            {{ quoteOverview.financialData.currentPrice.fmt }}
+            {{ stockOverview.financialData.currentPrice.fmt }}
           </h4>
           <h6>
             52-Week Change:
-            {{ quoteOverview.defaultKeyStatistics['52WeekChange'].fmt }}
+            {{ stockOverview.defaultKeyStatistics['52WeekChange'].fmt }}
           </h6>
         </div>
       </em>
     </div>
 
     <div class="content-wrapper">
-      <div v-if="!isFetched" class="tabs-skeleton-wrapper">
-        <q-skeleton type="rect" width="200px" />
-        <q-skeleton type="rect" width="200px" />
-        <q-skeleton type="rect" width="200px" />
-      </div>
+      <SkeletonLoader
+        v-if="!isFetched"
+        repeat
+        inline
+        :type="['rect', 'rect', 'rect']"
+        :width="['200px', '200px', '200px']"
+        :height="['20px', '20px', '20px']"
+        class="tabs-skeleton-wrapper"
+      />
       <q-tabs
         v-else
         v-model="activeTab"
@@ -53,13 +62,17 @@
         <q-tab name="statistics" label="Statistics" />
       </q-tabs>
 
-      <div v-if="!isFetched && !error" class="summary-wrapper">
-        <q-skeleton type="QToolbar" width="850px" height="450px" />
-      </div>
+      <SkeletonLoader
+        v-if="!isFetched"
+        type="QToolbar"
+        width="850px"
+        height="450px"
+        class="summary-wrapper"
+      />
       <q-tab-panels v-else v-model="activeTab" animated>
         <q-tab-panel name="summary">
           <div class="summary-wrapper">
-            <p>{{ quoteOverview.assetProfile.longBusinessSummary }}</p>
+            <p>{{ stockOverview.assetProfile.longBusinessSummary }}</p>
           </div>
         </q-tab-panel>
 
@@ -74,47 +87,47 @@
               <StatisticsItem
                 long-label="Price to Book"
                 short-label="(P/B)"
-                :value="quoteOverview.defaultKeyStatistics.priceToBook.fmt"
+                :value="stockOverview.defaultKeyStatistics.priceToBook.fmt"
               />
               <StatisticsItem
                 long-label="Enterprise Value"
                 short-label="(EV)"
-                :value="quoteOverview.defaultKeyStatistics.enterpriseValue.fmt"
+                :value="stockOverview.defaultKeyStatistics.enterpriseValue.fmt"
               />
               <StatisticsItem
                 long-label="Forward Price to Earnings"
                 short-label="(P/E)"
-                :value="quoteOverview.defaultKeyStatistics.forwardPE.fmt"
+                :value="stockOverview.defaultKeyStatistics.forwardPE.fmt"
               />
               <StatisticsItem
                 long-label="Price to Book"
                 short-label="(P/B)"
-                :value="quoteOverview.defaultKeyStatistics.priceToBook.fmt"
+                :value="stockOverview.defaultKeyStatistics.priceToBook.fmt"
               />
               <StatisticsItem
                 long-label="Enterprise Value to Revenue"
                 short-label="(EV/Revenue)"
                 :value="
-                  quoteOverview.defaultKeyStatistics.enterpriseToRevenue.fmt
+                  stockOverview.defaultKeyStatistics.enterpriseToRevenue.fmt
                 "
               />
               <StatisticsItem
                 long-label="Enterprise Value to EBITDA"
                 short-label="(EV/EBITDA)"
                 :value="
-                  quoteOverview.defaultKeyStatistics.enterpriseToEbitda.fmt
+                  stockOverview.defaultKeyStatistics.enterpriseToEbitda.fmt
                 "
               />
               <h5 class="statistics-section-title">Management Effectiveness</h5>
               <StatisticsItem
                 long-label="Return on Assets"
                 short-label="TTM"
-                :value="quoteOverview.financialData.returnOnAssets.fmt"
+                :value="stockOverview.financialData.returnOnAssets.fmt"
               />
               <StatisticsItem
                 long-label="Return on Equity"
                 short-label="TTM"
-                :value="quoteOverview.financialData.returnOnEquity.fmt"
+                :value="stockOverview.financialData.returnOnEquity.fmt"
               />
             </div>
 
@@ -123,46 +136,46 @@
               <StatisticsItem
                 long-label="Revenue"
                 short-label="TTM"
-                :value="quoteOverview.financialData.totalRevenue.fmt"
+                :value="stockOverview.financialData.totalRevenue.fmt"
               />
               <StatisticsItem
                 long-label="Revenue Per Share"
                 short-label="TTM"
-                :value="quoteOverview.financialData.revenuePerShare.fmt"
+                :value="stockOverview.financialData.revenuePerShare.fmt"
               />
               <StatisticsItem
                 long-label="Quarterly Revenue Growth"
                 short-label="YOY"
-                :value="quoteOverview.financialData.revenueGrowth.fmt"
+                :value="stockOverview.financialData.revenueGrowth.fmt"
               />
               <StatisticsItem
                 long-label="Gross Profit"
                 short-label="TTM"
-                :value="quoteOverview.financialData.grossProfits.fmt"
+                :value="stockOverview.financialData.grossProfits.fmt"
               />
               <StatisticsItem
                 long-label="EBITDA"
                 short-label="TTM"
-                :value="quoteOverview.financialData.ebitda.fmt"
+                :value="stockOverview.financialData.ebitda.fmt"
               />
               <StatisticsItem
                 long-label="Net Income to Common"
                 short-label="TTM"
                 :value="
-                  quoteOverview.defaultKeyStatistics.netIncomeToCommon.fmt
+                  stockOverview.defaultKeyStatistics.netIncomeToCommon.fmt
                 "
               />
               <h5 class="statistics-section-title">Dividends &amp; Splits</h5>
               <StatisticsItem
                 long-label="Last Dividend Value"
                 :value="
-                  quoteOverview.defaultKeyStatistics.lastDividendValue.fmt
+                  stockOverview.defaultKeyStatistics.lastDividendValue.fmt
                 "
               />
               <StatisticsItem
                 long-label="Last Split Factor"
                 :value="
-                  quoteOverview.defaultKeyStatistics.lastSplitFactor.toString()
+                  stockOverview.defaultKeyStatistics.lastSplitFactor.toString()
                 "
               />
             </div>
@@ -178,12 +191,14 @@ import { defineComponent } from 'vue';
 
 import { mapGetters } from 'vuex';
 
+import SkeletonLoader from '@/components/molecules/SkeletonLoader.vue';
 import StatisticsItem from '@/components/molecules/StatisticsItem.vue';
-import { QuoteOverview } from '@/types';
+import { StockOverview } from '@/types';
 
 export default defineComponent({
   name: 'StockOverviewBody',
   components: {
+    SkeletonLoader,
     StatisticsItem
   },
   data() {
@@ -192,14 +207,14 @@ export default defineComponent({
     };
   },
   computed: {
-    quoteOverview() {
+    stockOverview() {
       const value = this.$store.getters[
-        'overview/quoteOverview'
-      ] as QuoteOverview;
+        'overview/stockOverview'
+      ] as StockOverview;
       return value.quoteSummary.result[0];
     },
     companySymbol() {
-      const value = this.quoteOverview.quoteType.symbol;
+      const value = this.stockOverview.quoteType.symbol;
       const parsedSymbol = value.split('.')[0] as string;
       return parsedSymbol;
     },
@@ -252,10 +267,10 @@ export default defineComponent({
 }
 
 .tabs-skeleton-wrapper {
-  margin-top: -2.2rem;
+  margin-top: -2rem;
 
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-around;
 }
 
 .tabs-options {
