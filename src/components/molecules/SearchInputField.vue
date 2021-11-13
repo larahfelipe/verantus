@@ -14,6 +14,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
+import { SearchInputFieldProps } from '@/types';
+
 export default defineComponent({
   name: 'SearchInputField',
   props: {
@@ -27,7 +29,7 @@ export default defineComponent({
       required: false,
       default: false
     }
-  },
+  } as SearchInputFieldProps,
   emits: ['change-event'],
   data() {
     return {

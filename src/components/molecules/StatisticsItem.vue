@@ -11,6 +11,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
+import { StatisticsItemProps } from '@/types';
+
 export default defineComponent({
   name: 'StatisticsItem',
   props: {
@@ -27,7 +29,7 @@ export default defineComponent({
       type: String,
       required: true
     }
-  },
+  } as StatisticsItemProps,
   computed: {
     parsedValue() {
       return this.value === undefined ? 'N/A' : (this.value as string);

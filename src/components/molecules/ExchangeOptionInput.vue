@@ -5,6 +5,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
+import { ExchangeOptionInputProps } from '@/types';
+
 export default defineComponent({
   name: 'ExchangeOptionInput',
   props: {
@@ -13,7 +15,7 @@ export default defineComponent({
       required: true,
       default: () => []
     }
-  },
+  } as ExchangeOptionInputProps,
   emits: ['select-event'],
   data() {
     return {

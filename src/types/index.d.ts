@@ -1,11 +1,12 @@
 import { PropType } from 'vue';
 
+import { QOptionGroupProps, QSkeletonProps } from 'quasar';
 import { ActionContext } from 'vuex';
 
 type ComponentProps<T = unknown> = {
   type: PropType<T>;
   required: boolean;
-  default: unknown;
+  default?: unknown;
 };
 
 export type SearchInputFieldProps = {
@@ -14,11 +15,11 @@ export type SearchInputFieldProps = {
 };
 
 export type ExchangeOptionInputProps = {
-  options: ComponentProps<string[]>;
+  options: ComponentProps<QOptionGroupProps['options']>;
 };
 
 export type SkeletonLoaderProps = {
-  type: ComponentProps<string | string[]>;
+  type: ComponentProps<QSkeletonProps['type']>;
   width: ComponentProps<string | string[]>;
   height: ComponentProps<string | string[]>;
   repeat: ComponentProps<boolean>;

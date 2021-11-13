@@ -27,20 +27,20 @@ export default defineComponent({
   name: 'SkeletonLoader',
   props: {
     type: {
-      type: [String, Array],
+      type: [String, Array] as any,
       required: true
     },
     width: {
-      type: [String, Array],
+      type: [String, Array] as any,
       required: true
     },
     height: {
-      type: [String, Array],
+      type: [String, Array] as any,
       required: true
     },
     repeat: {
       type: Boolean,
-      default: false
+      required: false
     }
   }
 });
