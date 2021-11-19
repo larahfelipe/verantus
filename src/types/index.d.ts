@@ -3,6 +3,12 @@ import { PropType } from 'vue';
 import { QOptionGroupProps, QSkeletonProps } from 'quasar';
 import { ActionContext } from 'vuex';
 
+export type Payload = {
+  stockSymbol: string;
+  stockExchange: string;
+  modules: string;
+};
+
 type ComponentProps<T = unknown> = {
   type: PropType<T>;
   required: boolean;
@@ -25,17 +31,26 @@ export type SkeletonLoaderProps = {
   repeat: ComponentProps<boolean>;
 };
 
+export type SummaryTabProps = {
+  text: ComponentProps<string>;
+};
+
+export type StockOverviewBodyTitleProps = {
+  symbol: ComponentProps<string>;
+  data: ComponentProps<StockOverviewDestructured>;
+};
+
 export type StatisticsItemProps = {
   longLabel: ComponentProps<string>;
   shortLabel: ComponentProps<string>;
   value: ComponentProps<string>;
 };
 
-export type Payload = {
-  stockSymbol: string;
-  stockExchange: string;
-  modules: string;
+export type StatisticsTabProps = {
+  data: ComponentProps<StockOverviewDestructured>;
 };
+
+type StockOverviewDestructured = StockOverview['quoteSummary']['result'][0];
 
 type StockStatisticsProps = {
   raw: number;
