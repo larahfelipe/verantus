@@ -2,7 +2,7 @@
   <div class="chart-wrapper">
     <apexchart
       width="100%"
-      height="580px"
+      height="510px"
       type="area"
       :options="chartOptions"
       :series="chartSeries"
@@ -41,14 +41,18 @@ export default defineComponent({
         },
         xaxis: {
           labels: {
-            formatter: (value: number) => this.parseTime(value)
+            show: false,
+            formatter: (value: number) => 'Time: ' + this.parseTime(value)
+          },
+          axisTicks: {
+            show: false
           }
         },
         yaxis: {
           labels: {
             formatter: (value: number) => {
               const symbol = this.data.meta.symbol as string;
-              const fmtPrice = '$' + value.toFixed(2);
+              const fmtPrice = '$ ' + value.toFixed(2);
 
               return symbol.endsWith('.SA') ? 'R' + fmtPrice : fmtPrice;
             }
