@@ -9,7 +9,8 @@ export default {
       isLoading: false,
       isFetched: false,
       error: null,
-      stockOverview: null
+      stockOverview: null,
+      stockChart: null
     };
   },
   getters,

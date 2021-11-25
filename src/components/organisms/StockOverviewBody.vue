@@ -60,7 +60,7 @@
         </q-tab-panel>
 
         <q-tab-panel name="chart">
-          <p>Chart (soon...)</p>
+          <ChartTab :data="stockChart" />
         </q-tab-panel>
 
         <q-tab-panel name="statistics">
@@ -76,11 +76,12 @@ import { defineComponent } from 'vue';
 
 import { mapGetters } from 'vuex';
 
+import ChartTab from '@/components/molecules/ChartTab.vue';
 import SkeletonLoader from '@/components/molecules/SkeletonLoader.vue';
 import StatisticsTab from '@/components/molecules/StatisticsTab.vue';
 import StockOverviewBodyTitle from '@/components/molecules/StockOverviewBodyTitle.vue';
 import SummaryTab from '@/components/molecules/SummaryTab.vue';
-import { StockOverview } from '@/types';
+import { StockOverview, StockChart } from '@/types';
 
 export default defineComponent({
   name: 'StockOverviewBody',
@@ -88,6 +89,7 @@ export default defineComponent({
     SkeletonLoader,
     StockOverviewBodyTitle,
     SummaryTab,
+    ChartTab,
     StatisticsTab
   },
   data() {
@@ -101,6 +103,10 @@ export default defineComponent({
         'overview/stockOverview'
       ] as StockOverview;
       return value.quoteSummary.result[0];
+    },
+    stockChart() {
+      const value = this.$store.getters['overview/stockChart'] as StockChart;
+      return value.chart.result[0];
     },
     companySymbol() {
       const value = this.stockOverview.quoteType.symbol;

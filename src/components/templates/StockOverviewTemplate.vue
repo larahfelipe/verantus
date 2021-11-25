@@ -23,11 +23,14 @@ export default defineComponent({
     StockOverviewBody
   },
   created() {
-    this.$store.dispatch('overview/fetchStockOverview', {
+    const defaultStock = {
       stockSymbol: 'AAPL',
       stockExchange: '',
       modules: 'assetProfile,quoteType,defaultKeyStatistics,financialData'
-    });
+    };
+
+    this.$store.dispatch('overview/fetchStockOverview', defaultStock);
+    this.$store.dispatch('overview/fetchStockChart', defaultStock);
   }
 });
 </script>

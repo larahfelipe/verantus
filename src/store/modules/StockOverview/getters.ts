@@ -12,5 +12,8 @@ export default {
   },
   stockOverview(state) {
     return state.stockOverview;
+  },
+  stockChart(state) {
+    return state.stockChart;
   }
 } as StockOverviewGetters;

@@ -7,6 +7,7 @@ export type Payload = {
   stockSymbol: string;
   stockExchange: string;
   modules: string;
+  range: string;
 };
 
 type ComponentProps<T = unknown> = {
@@ -50,7 +51,13 @@ export type StatisticsTabProps = {
   data: ComponentProps<StockOverviewDestructured>;
 };
 
+export type StockChartTabProps = {
+  data: ComponentProps<StockChartDestructured>;
+};
+
 type StockOverviewDestructured = StockOverview['quoteSummary']['result'][0];
+
+type StockChartDestructured = StockChart['chart']['result'][0];
 
 type StockStatisticsProps = {
   raw: number;
@@ -114,11 +121,39 @@ export type StockOverview = {
   };
 };
 
+export type StockChart = {
+  chart: {
+    result: [
+      meta: {
+        symbol: string;
+        currency: string;
+        exchangeName: string;
+        instrumentType: string;
+        exchangeTimezoneName: string;
+        range: string;
+      },
+      timestamp: number[],
+      indicators: {
+        quote: [
+          {
+            volume: number[];
+            close: number[];
+            open: number[];
+            high: number[];
+            low: number[];
+          }
+        ];
+      }
+    ];
+  };
+};
+
 export type StockOverviewState = {
   isLoading: boolean;
   isFetched: boolean;
   error: any;
   stockOverview: StockOverview;
+  stockChart: StockChart;
 };
 
 export type StockOverviewGetters = {
@@ -126,6 +161,7 @@ export type StockOverviewGetters = {
   isFetched: (state: StockOverviewState) => boolean;
   error: (state: StockOverviewState) => any;
   stockOverview: (state: StockOverviewState) => StockOverview;
+  stockChart: (state: StockOverviewState) => StockChart;
 };
 
 export type StockOverviewMutations = {
@@ -133,10 +169,15 @@ export type StockOverviewMutations = {
   setIsFetched: (state: StockOverviewState, payload: boolean) => void;
   setError: (state: StockOverviewState, payload: boolean) => void;
   setStockOverview: (state: StockOverviewState, payload: StockOverview) => void;
+  setStockChart: (state: StockOverviewState, payload: StockChart) => void;
 };
 
 export type StockOverviewActions = {
   fetchStockOverview: (
+    context: ActionContext<StockOverview, unknown>,
+    payload: Payload
+  ) => void;
+  fetchStockChart: (
     context: ActionContext<StockOverview, unknown>,
     payload: Payload
   ) => void;

@@ -12,5 +12,8 @@ export default {
   },
   setStockOverview(state, payload) {
     state.stockOverview = payload;
+  },
+  setStockChart(state, payload) {
+    state.stockChart = payload;
   }
 } as StockOverviewMutations;

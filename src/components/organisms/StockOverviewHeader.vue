@@ -78,6 +78,7 @@ export default defineComponent({
       } as Payload;
 
       this.$store.dispatch('overview/fetchStockOverview', payload);
+      this.$store.dispatch('overview/fetchStockChart', payload);
     }
   }
 });
