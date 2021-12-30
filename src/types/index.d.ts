@@ -103,7 +103,7 @@ export type StockOverview = {
           enterpriseToEbitda: StockStatisticsProps;
           lastDividendValue: StockStatisticsProps;
           lastSplitDate: StockStatisticsProps;
-          lastSplitFactor: string | number;
+          lastSplitFactor: string | undefined;
         };
         financialData: {
           financialCurrency: string;

@@ -84,7 +84,7 @@
       />
       <StatisticsItem
         long-label="Last Split Factor"
-        :value="data.defaultKeyStatistics.lastSplitFactor.toString()"
+        :value="data.defaultKeyStatistics.lastSplitFactor"
       />
     </div>
   </div>

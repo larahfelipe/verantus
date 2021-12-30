@@ -32,7 +32,7 @@ export default defineComponent({
   } as StatisticsItemProps,
   computed: {
     parsedValue() {
-      return this.value === undefined ? 'N/A' : (this.value as string);
+      return !this.value ? 'N/A' : (this.value as string);
     }
   }
 });
