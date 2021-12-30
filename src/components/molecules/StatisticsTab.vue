@@ -35,12 +35,12 @@
       <h5 class="statistics-section-title">Management Effectiveness</h5>
       <StatisticsItem
         long-label="Return on Assets"
-        short-label="TTM"
+        short-label="(ROA) — TTM"
         :value="data.financialData.returnOnAssets.fmt"
       />
       <StatisticsItem
         long-label="Return on Equity"
-        short-label="TTM"
+        short-label="(ROE) — TTM"
         :value="data.financialData.returnOnEquity.fmt"
       />
     </div>
@@ -53,7 +53,7 @@
         :value="data.financialData.totalRevenue.fmt"
       />
       <StatisticsItem
-        long-label="Revenue Per Share"
+        long-label="Revenue per Share"
         short-label="TTM"
         :value="data.financialData.revenuePerShare.fmt"
       />
