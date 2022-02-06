@@ -18,9 +18,9 @@
         :value="data.defaultKeyStatistics.forwardPE.fmt"
       />
       <StatisticsItem
-        long-label="Price to Book"
-        short-label="(P/B)"
-        :value="data.defaultKeyStatistics.priceToBook.fmt"
+        long-label="Trailing Earnings per Share"
+        short-label="(EPS)"
+        :value="data.defaultKeyStatistics.trailingEps.fmt"
       />
       <StatisticsItem
         long-label="Enterprise Value to Revenue"

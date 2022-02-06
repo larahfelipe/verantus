@@ -10,7 +10,7 @@
       <div class="title-minor">
         <h5>Stock Price</h5>
         <h4>
-          {{ data.financialData.currentPrice.fmt }}
+          {{ parsedStockPrice }}
         </h4>
         <h6>
           52-Week Change:
@@ -37,7 +37,14 @@ export default defineComponent({
       type: Object,
       required: true
     }
-  } as StockOverviewBodyTitleProps
+  } as StockOverviewBodyTitleProps,
+  computed: {
+    parsedStockPrice() {
+      return this.data.financialData.financialCurrency === 'USD'
+        ? `$ ${this.data.financialData.currentPrice.fmt}`
+        : `R$ ${this.data.financialData.currentPrice.fmt}`;
+    }
+  }
 });
 </script>
 
