@@ -16,7 +16,7 @@ export default defineComponent({
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&display=swap');
 
 * {
   margin: 0;
@@ -30,7 +30,7 @@ html {
 
 html,
 body {
-  font-family: 'Roboto Slab', serif !important;
+  font-family: 'Inter Tight', sans-serif !important;
 }
 
 body,
@@ -40,7 +40,9 @@ select,
 textarea {
   border: none;
   outline: inherit;
+
   color: #353a45;
+  background-color: #f2f3f5;
 }
 
 input,
@@ -57,7 +59,7 @@ a {
 }
 
 ::-webkit-scrollbar {
-  width: 7px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track,
@@ -66,7 +68,7 @@ a {
 }
 
 ::-webkit-scrollbar-track {
-  background-color: #ebedf3;
+  background-color: #f2f3f5;
 }
 
 ::-webkit-scrollbar-thumb {

@@ -1,11 +1,11 @@
 <template>
-  <div class="company-statistics-section-wrapper">
-    <div class="statistics-title-wrapper">
-      <QIcon name="bi-bar-chart" size="xs" />
-      <h5>Statistics</h5>
+  <div :class="companyFinancialStatisticsStyles">
+    <div class="company-financial-statistics-title-wrapper">
+      <QIcon name="bi-bank" size="xs" />
+      <h5>Financial Statistics</h5>
     </div>
 
-    <div class="statistics-details-wrapper">
+    <div :class="statisticsDetailsStyles">
       <div class="valuation-measures-wrapper">
         <h6>Valuation Measures</h6>
         <StatisticsItem
@@ -92,25 +92,41 @@ import { defineComponent } from 'vue';
 import StatisticsItem from '@/components/molecules/StatisticsItem.vue';
 
 export default defineComponent({
-  name: 'CompanyStatisticsSection',
+  name: 'CompanyFinancialStatisticsSection',
   components: {
     StatisticsItem
+  },
+  computed: {
+    theme() {
+      return this.$store.getters['theme/currentTheme'];
+    },
+    companyFinancialStatisticsStyles() {
+      return this.theme === 'dark'
+        ? 'company-financial-statistics-section-wrapper company-financial-statistics-section-wrapper__dark'
+        : 'company-financial-statistics-section-wrapper';
+    },
+    statisticsDetailsStyles() {
+      return this.theme === 'dark'
+        ? 'financial-statistics-details-wrapper financial-statistics-details-wrapper__dark'
+        : 'financial-statistics-details-wrapper';
+    }
   }
 });
 </script>
 
 <style scoped>
-.company-statistics-section-wrapper {
+.company-financial-statistics-section-wrapper {
   width: 30%;
-  height: 70%;
-
-  align-self: flex-end;
 
   padding-top: 2rem;
   padding-bottom: 1.5rem;
 }
 
-.statistics-title-wrapper {
+.company-financial-statistics-section-wrapper__dark {
+  color: #dddcdc;
+}
+
+.company-financial-statistics-title-wrapper {
   display: flex;
   align-items: center;
 
@@ -119,11 +135,11 @@ export default defineComponent({
   margin-bottom: 1rem;
 }
 
-.statistics-title-wrapper h5 {
+.company-financial-statistics-title-wrapper h5 {
   font-weight: 600;
 }
 
-.statistics-details-wrapper {
+.financial-statistics-details-wrapper {
   height: 100%;
 
   display: flex;
@@ -131,13 +147,29 @@ export default defineComponent({
 
   gap: 1rem;
 
-  overflow: auto;
+  overflow-y: auto;
 }
 
-.statistics-details-wrapper h6 {
+.financial-statistics-details-wrapper__dark::-webkit-scrollbar-track {
+  background-color: #18191c;
+}
+
+.financial-statistics-details-wrapper__dark::-webkit-scrollbar-thumb {
+  background-color: #505050;
+}
+
+.financial-statistics-details-wrapper__dark::-webkit-scrollbar-thumb:hover {
+  background-color: #767679;
+}
+
+.financial-statistics-details-wrapper h6 {
   padding-left: 0.5rem;
   margin-bottom: 0.8rem;
 
-  background: #f5f5f7;
+  background-color: #ebebeb;
+}
+
+.company-financial-statistics-section-wrapper__dark h6 {
+  background-color: #1f2122;
 }
 </style>

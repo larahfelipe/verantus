@@ -1,5 +1,5 @@
 <template>
-  <div class="statistics-item-wrapper">
+  <div :class="statisticsItemStyles">
     <span>
       {{ label }}
       <span class="statistics-item-abbreviation">{{ labelAbbreviation }}</span>
@@ -31,6 +31,14 @@ export default defineComponent({
     }
   } as StatisticsItemProps,
   computed: {
+    theme() {
+      return this.$store.getters['theme/currentTheme'];
+    },
+    statisticsItemStyles() {
+      return this.theme === 'dark'
+        ? 'statistics-item-wrapper statistics-item-wrapper__dark'
+        : 'statistics-item-wrapper';
+    },
     parsedValue() {
       return this.value ? this.value : 'N/A';
     }
@@ -50,7 +58,15 @@ export default defineComponent({
   line-height: 30px;
 }
 
+.statistics-item-wrapper__dark {
+  border-bottom: 1px solid #353535;
+}
+
 .statistics-item-abbreviation {
   color: #9b9b9b;
+}
+
+.statistics-item-wrapper__dark .statistics-item-abbreviation {
+  color: #6b6b6b;
 }
 </style>

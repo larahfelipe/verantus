@@ -59,8 +59,8 @@ export default defineComponent({
         modules: config.yahooFinanceApiModules
       },
       selectOptions: [
-        { label: 'New York Stock Exchange (NYSE)', value: '' },
-        { label: 'Brasil, Bolsa, Balcão (B3)', value: '.SA' }
+        { label: 'USA - National Market System (NMS)', value: '' },
+        { label: 'BR - Brasil, Bolsa, Balcão (B3)', value: '.SA' }
       ] as SelectOption[]
     };
   },
