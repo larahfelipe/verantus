@@ -1,16 +1,16 @@
 <template>
-  <StockOverviewTemplate />
+  <DashboardTemplate />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-import StockOverviewTemplate from '@/components/templates/StockOverviewTemplate.vue';
+import DashboardTemplate from '@/components/templates/DashboardTemplate.vue';
 
 export default defineComponent({
   name: 'MainPage',
   components: {
-    StockOverviewTemplate
+    DashboardTemplate
   }
 });
 </script>

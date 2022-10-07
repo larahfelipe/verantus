@@ -1,9 +1,11 @@
 import axios from 'axios';
 
+import config from '@/config';
+
 const api = axios.create({
   baseURL: 'https://yfapi.net',
   headers: {
-    'x-api-key': import.meta.env.VITE_YAHOO_FINANCE_API_KEY as string
+    'x-api-key': config.yahooFinanceApiKey
   }
 });
 

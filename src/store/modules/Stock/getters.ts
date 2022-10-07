@@ -1,4 +1,4 @@
-import { StockOverviewGetters } from '@/types';
+import type { StockGetters } from '@/types';
 
 export default {
   isLoading(state) {
@@ -10,10 +10,10 @@ export default {
   error(state) {
     return state.error;
   },
-  stockOverview(state) {
-    return state.stockOverview;
+  stockData(state) {
+    return state.stockData;
   },
   stockChart(state) {
     return state.stockChart;
   }
-} as StockOverviewGetters;
+} as StockGetters;

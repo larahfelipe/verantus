@@ -1,4 +1,4 @@
-import { StockOverviewMutations } from '@/types';
+import type { StockMutations } from '@/types';
 
 export default {
   setIsLoading(state, payload) {
@@ -10,10 +10,10 @@ export default {
   setError(state, payload) {
     state.error = payload;
   },
-  setStockOverview(state, payload) {
-    state.stockOverview = payload;
+  setStockData(state, payload) {
+    state.stockData = payload;
   },
   setStockChart(state, payload) {
     state.stockChart = payload;
   }
-} as StockOverviewMutations;
+} as StockMutations;

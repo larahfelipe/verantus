@@ -1,11 +1,11 @@
-import { PropType } from 'vue';
+import type { PropType } from 'vue';
 
-import { QOptionGroupProps, QSkeletonProps } from 'quasar';
-import { ActionContext } from 'vuex';
+import type { QOptionGroupProps, QSkeletonProps } from 'quasar';
+import type { ActionContext } from 'vuex';
 
-export type Payload = {
-  stockSymbol: string;
-  stockExchange: string;
+export type StockPayload = {
+  symbol: string;
+  exchange: string;
   modules: string;
   range: string;
 };
@@ -13,12 +13,35 @@ export type Payload = {
 type ComponentProps<T = unknown> = {
   type: PropType<T>;
   required: boolean;
-  default?: unknown;
+  default?: T;
 };
 
-export type SearchInputFieldProps = {
-  label: ComponentProps<string>;
-  loading: ComponentProps<boolean>;
+export type InputFieldProps = {
+  type: ComponentProps<string>;
+  placeholder: ComponentProps<string>;
+};
+
+export type SelectOption = {
+  label: string;
+  value: string;
+};
+
+export type SelectInputProps = {
+  options: ComponentProps<SelectOption[]>;
+};
+
+export type ButtonType = 'submit' | 'button' | 'reset';
+
+export type ButtonProps = {
+  type: ComponentProps<ButtonType>;
+};
+
+export type ToggleInputProps = {
+  value: ComponentProps<boolean>;
+  uncheckedIcon: ComponentProps<string>;
+  checkedIcon: ComponentProps<string>;
+  size: ComponentProps<string>;
+  color: ComponentProps<string>;
 };
 
 export type ExchangeOptionInputProps = {
@@ -38,7 +61,7 @@ export type SummaryTabProps = {
 
 export type StockOverviewBodyTitleProps = {
   symbol: ComponentProps<string>;
-  data: ComponentProps<StockOverviewDestructured>;
+  data: ComponentProps<StockDataDestructured>;
 };
 
 export type StatisticsItemProps = {
@@ -48,14 +71,14 @@ export type StatisticsItemProps = {
 };
 
 export type StatisticsTabProps = {
-  data: ComponentProps<StockOverviewDestructured>;
+  data: ComponentProps<StockDataDestructured>;
 };
 
 export type StockChartTabProps = {
   data: ComponentProps<StockChartDestructured>;
 };
 
-type StockOverviewDestructured = StockOverview['quoteSummary']['result'][0];
+type StockDataDestructured = StockOverview['quoteSummary']['result'][0];
 
 type StockChartDestructured = StockChart['chart']['result'][0];
 
@@ -65,7 +88,7 @@ type StockStatisticsProps = {
   longFmt?: string;
 };
 
-export type StockOverview = {
+export type StockData = {
   quoteSummary: {
     result: [
       {
@@ -148,37 +171,51 @@ export type StockChart = {
   };
 };
 
-export type StockOverviewState = {
+export type StockState = {
   isLoading: boolean;
   isFetched: boolean;
   error: any;
-  stockOverview: StockOverview;
-  stockChart: StockChart;
+  stockData: StockData | null;
+  stockChart: StockChart | null;
 };
 
-export type StockOverviewGetters = {
-  isLoading: (state: StockOverviewState) => boolean;
-  isFetched: (state: StockOverviewState) => boolean;
-  error: (state: StockOverviewState) => any;
-  stockOverview: (state: StockOverviewState) => StockOverview;
-  stockChart: (state: StockOverviewState) => StockChart;
+export type StockGetters = {
+  isLoading: (state: StockState) => boolean;
+  isFetched: (state: StockState) => boolean;
+  error: (state: StockState) => any;
+  stockData: (state: StockState) => StockData;
+  stockChart: (state: StockState) => StockChart;
 };
 
-export type StockOverviewMutations = {
-  setIsLoading: (state: StockOverviewState, payload: boolean) => void;
-  setIsFetched: (state: StockOverviewState, payload: boolean) => void;
-  setError: (state: StockOverviewState, payload: boolean) => void;
-  setStockOverview: (state: StockOverviewState, payload: StockOverview) => void;
-  setStockChart: (state: StockOverviewState, payload: StockChart) => void;
+export type StockMutations = {
+  setIsLoading: (state: StockState, payload: boolean) => void;
+  setIsFetched: (state: StockState, payload: boolean) => void;
+  setError: (state: StockState, payload: boolean) => void;
+  setStockData: (state: StockState, payload: StockData) => void;
+  setStockChart: (state: StockState, payload: StockChart) => void;
 };
 
-export type StockOverviewActions = {
-  fetchStockOverview: (
-    context: ActionContext<StockOverview, unknown>,
-    payload: Payload
+export type StockActions = {
+  fetchStockData: (
+    context: ActionContext<StockData, unknown>,
+    payload: StockPayload
   ) => void;
   fetchStockChart: (
-    context: ActionContext<StockOverview, unknown>,
-    payload: Payload
+    context: ActionContext<StockData, unknown>,
+    payload: StockPayload
   ) => void;
+};
+
+export type Theme = 'light' | 'dark';
+
+export type ThemeState = {
+  currentTheme: Theme;
+};
+
+export type ThemeGetters = {
+  currentTheme: (state: ThemeState) => string;
+};
+
+export type ThemeMutations = {
+  setCurrentTheme: (state: ThemeState, payload: Theme) => void;
 };

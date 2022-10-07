@@ -24,6 +24,7 @@
   "plugins": ["@typescript-eslint", "eslint-plugin-import-helpers"],
   "rules": {
     "no-duplicate-imports": "error",
+    "vue/no-child-content": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
