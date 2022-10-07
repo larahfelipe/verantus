@@ -6,18 +6,8 @@
     </div>
 
     <div :class="statisticsDetailsStyles">
-      <div class="valuation-measures-wrapper">
+      <div class="valuation-measures-section-wrapper">
         <h6>Valuation Measures</h6>
-        <StatisticsItem
-          label="Price To Book"
-          label-abbreviation="P/B"
-          value="1"
-        />
-        <StatisticsItem
-          label="Price To Book"
-          label-abbreviation="P/E"
-          value="1"
-        />
         <StatisticsItem
           label="Enterprise Value"
           label-abbreviation="EV"
@@ -28,9 +18,10 @@
           label-abbreviation="P/E"
           value="1"
         />
+        <StatisticsItem label="PEG Ratio" value="1" />
         <StatisticsItem
-          label="Trailing Earnings per Share"
-          label-abbreviation="EPS"
+          label="Price to Book"
+          label-abbreviation="P/B"
           value="1"
         />
         <StatisticsItem
@@ -45,41 +36,115 @@
         />
       </div>
 
-      <div class="income-statements-wrapper">
-        <h6>Income Statements</h6>
-        <StatisticsItem label="Revenue" value="1" />
-        <StatisticsItem label="Revenue per Share" value="1" />
-        <StatisticsItem label="Quarterly Revenue Growth" value="1" />
-        <StatisticsItem label="Gross Profit" value="1" />
-        <StatisticsItem label="EBITDA" value="1" />
-        <StatisticsItem label="Net Income to Common" value="1" />
+      <div class="fiscal-year-section-wrapper">
+        <h6>Fiscal Year</h6>
+        <StatisticsItem label="Fiscal Year Ends" value="1" />
+        <StatisticsItem
+          label="Most Recent Quarter"
+          label-abbreviation="MRQ"
+          value="1"
+        />
       </div>
 
-      <div class="management-effectiveness-wrapper">
+      <div class="profitability-section-wrapper">
+        <h6>Profitability</h6>
+        <StatisticsItem label="Profit Margin" value="1" />
+        <StatisticsItem label="Operating Margin" value="1" />
+      </div>
+
+      <div class="income-statements-section-wrapper">
+        <h6>Income Statements</h6>
+        <StatisticsItem label="Revenue" label-abbreviation="TTM" value="1" />
+        <StatisticsItem
+          label="Revenue per Share"
+          label-abbreviation="TTM"
+          value="1"
+        />
+        <StatisticsItem
+          label="Quarterly Revenue Growth"
+          label-abbreviation="YOY"
+          value="1"
+        />
+        <StatisticsItem
+          label="Gross Profit"
+          label-abbreviation="TTM"
+          value="1"
+        />
+        <StatisticsItem label="EBITDA" value="1" />
+        <StatisticsItem
+          label="Net Income to Common"
+          label-abbreviation="TTM"
+          value="1"
+        />
+        <StatisticsItem
+          label="Diluted Earnings per Share"
+          label-abbreviation="EPS - TTM"
+          value="1"
+        />
+        <StatisticsItem
+          label="Quarterly Earnings Growth"
+          label-abbreviation="YOY"
+          value="1"
+        />
+      </div>
+
+      <div class="management-effectiveness-section-wrapper">
         <h6>Management Effectiveness</h6>
         <StatisticsItem
-          label="Return on Equity"
-          label-abbreviation="ROE"
+          label="Return on Assets"
+          label-abbreviation="ROA - TTM"
           value="1"
         />
         <StatisticsItem
-          label="Return on Assets"
-          label-abbreviation="ROA"
+          label="Return on Equity"
+          label-abbreviation="ROE - TTM"
           value="1"
         />
       </div>
 
-      <div class="dividends-and-splits-wrapper">
-        <h6>Dividends &amp; Splits</h6>
+      <div class="balance-sheet-section-wrapper">
+        <h6>Balance Sheet</h6>
+        <StatisticsItem label="Total Cash" label-abbreviation="MRQ" value="1" />
         <StatisticsItem
-          label="Dividend Yield"
-          label-abbreviation="DY"
+          label="Total Cash Per Share"
+          label-abbreviation="MRQ"
           value="1"
         />
-        <StatisticsItem label="Payout Ratio" value="1" />
-        <StatisticsItem label="Dividend per Share" value="1" />
+        <StatisticsItem label="Total Debt" label-abbreviation="MRQ" value="1" />
+        <StatisticsItem
+          label="Current Ratio"
+          label-abbreviation="MRQ"
+          value="1"
+        />
+      </div>
+
+      <div class="cash-flow-statistics-wrapper">
+        <h6>Cash Flow</h6>
+        <StatisticsItem
+          label="Operating Cash Flow"
+          label-abbreviation="TTM"
+          value="1"
+        />
+        <StatisticsItem
+          label="Levered Free Cash Flow"
+          label-abbreviation="TTM"
+          value="1"
+        />
+      </div>
+
+      <div class="share-statistics-section-wrapper">
+        <h6>Shares Statistics</h6>
+        <StatisticsItem label="Shares Outstanding" value="1" />
+        <StatisticsItem label="Float" value="1" />
+        <StatisticsItem label="% Held by Insiders" value="1" />
+        <StatisticsItem label="% Held by Institutions" value="1" />
+      </div>
+
+      <div class="dividends-and-splits-section-wrapper">
+        <h6>Dividends &amp; Splits</h6>
         <StatisticsItem label="Dividend Date" value="1" />
-        <StatisticsItem label="Ex-Dividend Date" value="1" />
+        <StatisticsItem label="Last Dividend Value" value="1" />
+        <StatisticsItem label="Last Split Date" value="1" />
         <StatisticsItem label="Last Split Factor" value="1" />
       </div>
     </div>

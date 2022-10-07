@@ -50,6 +50,10 @@ export type StatisticsItemProps = {
   value: ComponentProps<string>;
 };
 
+export type StatisticsCardProps = {
+  title: ComponentProps<string>;
+};
+
 export type SkeletonLoaderProps = {
   type: ComponentProps<QSkeletonProps['type']>;
   width: ComponentProps<string | string[]>;

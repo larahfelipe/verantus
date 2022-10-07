@@ -1,12 +1,11 @@
 <template>
   <div class="app-body-wrapper">
     <CompanyOverviewSection />
-
     <div class="company-stock-chart-and-statistics-wrapper">
       <div class="company-stock-chart-and-time-series-statistics-wrapper">
         <CompanyStockChartSection />
+        <CompanyStockStatisticsSection />
       </div>
-
       <CompanyFinancialStatisticsSection />
     </div>
   </div>
@@ -18,12 +17,14 @@ import { defineComponent } from 'vue';
 import CompanyFinancialStatisticsSection from '@/components/molecules/CompanyFinancialStatisticsSection.vue';
 import CompanyOverviewSection from '@/components/molecules/CompanyOverviewSection.vue';
 import CompanyStockChartSection from '@/components/molecules/CompanyStockChartSection.vue';
+import CompanyStockStatisticsSection from '@/components/molecules/CompanyStockStatisticsSection.vue';
 
 export default defineComponent({
   name: 'AppBody',
   components: {
     CompanyOverviewSection,
     CompanyStockChartSection,
+    CompanyStockStatisticsSection,
     CompanyFinancialStatisticsSection
   }
 });
