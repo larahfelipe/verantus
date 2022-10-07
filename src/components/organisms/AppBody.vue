@@ -26,7 +26,7 @@ export default defineComponent({
   height: calc(100% - 5rem);
 
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
 
   padding: 3rem;
 }

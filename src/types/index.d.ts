@@ -1,6 +1,6 @@
 import type { PropType } from 'vue';
 
-import type { QOptionGroupProps, QSkeletonProps } from 'quasar';
+import type { QSkeletonProps } from 'quasar';
 import type { ActionContext } from 'vuex';
 
 export type StockPayload = {
@@ -44,8 +44,10 @@ export type ToggleInputProps = {
   color: ComponentProps<string>;
 };
 
-export type ExchangeOptionInputProps = {
-  options: ComponentProps<QOptionGroupProps['options']>;
+export type StatisticsItemProps = {
+  label: ComponentProps<string>;
+  labelAbbreviation: ComponentProps<string>;
+  value: ComponentProps<string>;
 };
 
 export type SkeletonLoaderProps = {
@@ -53,10 +55,6 @@ export type SkeletonLoaderProps = {
   width: ComponentProps<string | string[]>;
   height: ComponentProps<string | string[]>;
   repeat: ComponentProps<boolean>;
-};
-
-export type SummaryTabProps = {
-  text: ComponentProps<string>;
 };
 
 export type StockOverviewBodyTitleProps = {
