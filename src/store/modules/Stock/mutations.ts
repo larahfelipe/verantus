@@ -4,8 +4,8 @@ export default {
   setIsLoading(state, payload) {
     state.isLoading = payload;
   },
-  setIsFetched(state, payload) {
-    state.isFetched = payload;
+  setIsFetching(state, payload) {
+    state.isFetching = payload;
   },
   setError(state, payload) {
     state.error = payload;

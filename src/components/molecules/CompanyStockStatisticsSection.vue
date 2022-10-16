@@ -1,26 +1,33 @@
 <template>
   <div class="company-stock-statistics-section-wrapper">
     <StatisticsCardProps title="Recommendation">
-      <span>BUY</span>
+      <div :class="recommendationCardStyles">
+        <span>{{ data.analystRecommendation.toUpperCase() }}</span>
+      </div>
     </StatisticsCardProps>
 
     <StatisticsCardProps title="Previous Close">
-      <span>$ 145.43</span>
+      <span>{{ fmtPreviousClose }}</span>
     </StatisticsCardProps>
 
     <StatisticsCardProps title="52 Week Change">
-      <div class="week-change-wrapper">
-        <QIcon name="bi-arrow-down-circle" size="sm" />
-        <span>-14.73%</span>
+      <div :class="fiftyTwoWeekChangeCardStyles">
+        <QIcon
+          v-if="data.fiftyTwoWeekChange > 0"
+          name="bi-arrow-up-circle"
+          size="sm"
+        />
+        <QIcon v-else name="bi-arrow-down-circle" size="sm" />
+        <span>{{ fmtFiftyTwoWeekChange }}</span>
       </div>
     </StatisticsCardProps>
 
     <StatisticsCardProps title="52 Week High">
-      <span>$ 220.00</span>
+      <span>{{ fmtFiftyTwoWeekHigh }}</span>
     </StatisticsCardProps>
 
     <StatisticsCardProps title="52 Week Low">
-      <span>$ 130.00</span>
+      <span>{{ fmtFiftyTwoWeekLow }}</span>
     </StatisticsCardProps>
   </div>
 </template>
@@ -34,6 +41,39 @@ export default defineComponent({
   name: 'CompanyStockStatisticsSection',
   components: {
     StatisticsCardProps
+  },
+  props: {
+    data: {
+      type: Object,
+      required: true
+    }
+  },
+  computed: {
+    recommendationCardStyles() {
+      return this.data.analystRecommendation === 'buy'
+        ? 'recommendation-text-wrapper recommendation-text-wrapper--buy'
+        : 'recommendation-text-wrapper recommendation-text-wrapper--sell';
+    },
+    fiftyTwoWeekChangeCardStyles() {
+      return this.data.fiftyTwoWeekChange > 0
+        ? 'week-change-wrapper week-change-wrapper--positive'
+        : 'week-change-wrapper week-change-wrapper--negative';
+    },
+    parsedCurrency() {
+      return this.data.stockFinancialCurrency === 'USD' ? '$' : 'R$';
+    },
+    fmtPreviousClose() {
+      return `${this.parsedCurrency} ${this.data.previousClosePrice}`;
+    },
+    fmtFiftyTwoWeekChange() {
+      return `${(this.data.fiftyTwoWeekChange * 100).toFixed(2)}%`;
+    },
+    fmtFiftyTwoWeekHigh() {
+      return `${this.parsedCurrency} ${this.data.fiftyTwoWeekHigh}`;
+    },
+    fmtFiftyTwoWeekLow() {
+      return `${this.parsedCurrency} ${this.data.fiftyTwoWeekLow}`;
+    }
   }
 });
 </script>
@@ -49,10 +89,36 @@ export default defineComponent({
   padding-top: 1.5rem;
 }
 
+.recommendation-text-wrapper {
+  width: fit-content;
+
+  padding: 0 0.8rem;
+
+  border-radius: 1.5rem;
+}
+
+.recommendation-text-wrapper--buy {
+  border: 1px solid green;
+}
+
+.recommendation-text-wrapper--sell {
+  border: 1px solid red;
+}
+
 .week-change-wrapper {
   display: flex;
   align-items: center;
 
   gap: 0.75rem;
+}
+
+.recommendation-text-wrapper--buy,
+.week-change-wrapper--positive {
+  color: green;
+}
+
+.recommendation-text-wrapper--sell,
+.week-change-wrapper--negative {
+  color: red;
 }
 </style>

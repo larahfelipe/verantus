@@ -9,7 +9,7 @@ export default {
   state(): StockState {
     return {
       isLoading: false,
-      isFetched: false,
+      isFetching: false,
       error: null,
       stockData: null,
       stockChart: null

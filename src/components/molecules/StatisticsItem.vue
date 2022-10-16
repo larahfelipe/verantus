@@ -40,7 +40,7 @@ export default defineComponent({
         : 'statistics-item-wrapper';
     },
     parsedValue() {
-      return this.value ? this.value : 'N/A';
+      return this.value ? this.value : '-';
     }
   }
 });

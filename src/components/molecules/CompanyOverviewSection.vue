@@ -2,24 +2,29 @@
   <div :class="companyOverviewStyles">
     <div class="company-name-and-stock-details-wrapper">
       <div class="company-name-and-exchange-wrapper">
-        <h2>Apple Inc.</h2>
+        <h2>{{ data.companyName }}</h2>
 
         <div class="company-stock-exchange-wrapper">
-          <h4>AAPL</h4>
+          <h4>{{ fmtStockSymbol }}</h4>
 
           <div class="stock-exchange-name-wrapper">
             <QIcon name="bi-graph-up" size="xs" />
-            <h6>NASDAQ</h6>
+            <h6>{{ data.stockExchange }}</h6>
           </div>
         </div>
       </div>
 
       <div class="company-stock-price-wrapper">
-        <h3>$ 145,69</h3>
+        <h3>{{ fmtStockPrice }}</h3>
 
-        <div class="stock-price-float-wrapper">
-          <QIcon name="bi-arrow-up-circle" size="xs" />
-          <h6>+0,69 (0,47%)</h6>
+        <div :class="companyStockPriceFloatStyles">
+          <QIcon
+            v-if="data.stockPriceChangeSinceOpen.value > 0"
+            name="bi-arrow-up-circle"
+            size="xs"
+          />
+          <QIcon v-else name="bi-arrow-down-circle" size="xs" />
+          <h6>{{ fmtStockPriceFloat }}</h6>
         </div>
       </div>
     </div>
@@ -32,7 +37,7 @@
         </div>
 
         <div class="website-wrapper">
-          <a href="https://www.apple.com/">
+          <a :href="data.companyWebsite">
             <QIcon name="bi-box-arrow-in-up-right" size="xs" />
             <strong>Official website</strong>
           </a>
@@ -40,33 +45,7 @@
       </div>
 
       <div :class="companyDescriptionStyles">
-        <p>
-          Apple Inc. designs, manufactures, and markets smartphones, personal
-          computers, tablets, wearables, and accessories worldwide. It also
-          sells various related services. In addition, the company offers
-          iPhone, a line of smartphones; Mac, a line of personal computers;
-          iPad, a line of multi-purpose tablets; AirPods Max, an over-ear
-          wireless headphone; and wearables, home, and accessories comprising
-          AirPods, Apple TV, Apple Watch, Beats products, HomePod, and iPod
-          touch. Further, it provides AppleCare support services; cloud services
-          store services; and operates various platforms, including the App
-          Store that allow customers to discover and download applications and
-          digital content, such as books, music, video, games, and podcasts.
-          Additionally, the company offers various services, such as Apple
-          Arcade, a game subscription service; Apple Music, which offers users a
-          curated listening experience with on-demand radio stations; Apple
-          News+, a subscription news and magazine service; Apple TV+, which
-          offers exclusive original content; Apple Card, a co-branded credit
-          card; and Apple Pay, a cashless payment service, as well as licenses
-          its intellectual property. The company serves consumers, and small and
-          mid-sized businesses; and the education, enterprise, and government
-          markets. It distributes third-party applications for its products
-          through the App Store. The company also sells its products through its
-          retail and online stores, and direct sales force; and third-party
-          cellular network carriers, wholesalers, retailers, and resellers.
-          Apple Inc. was incorporated in 1977 and is headquartered in Cupertino,
-          California
-        </p>
+        <p>{{ data.companyBusinessSummary }}</p>
       </div>
     </div>
   </div>
@@ -77,6 +56,12 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'CompanyOverviewSection',
+  props: {
+    data: {
+      type: Object,
+      required: true
+    }
+  },
   computed: {
     theme() {
       return this.$store.getters['theme/currentTheme'];
@@ -86,10 +71,28 @@ export default defineComponent({
         ? 'company-overview-section-wrapper company-overview-section-wrapper__dark'
         : 'company-overview-section-wrapper';
     },
+    companyStockPriceFloatStyles() {
+      return this.data.stockPriceChangeSinceOpen.value > 0
+        ? 'stock-price-float-wrapper stock-price-float-wrapper--positive'
+        : 'stock-price-float-wrapper stock-price-float-wrapper--negative';
+    },
     companyDescriptionStyles() {
       return this.theme === 'dark'
         ? 'company-description-wrapper company-description-wrapper__dark'
         : 'company-description-wrapper';
+    },
+    fmtStockSymbol() {
+      return this.data.stockSymbol.endsWith('.SA')
+        ? this.data.stockSymbol.slice(0, -3)
+        : this.data.stockSymbol;
+    },
+    fmtStockPrice() {
+      const currency = this.data.stockFinancialCurrency === 'USD' ? '$' : 'R$';
+
+      return `${currency} ${this.data.currentStockPrice}`;
+    },
+    fmtStockPriceFloat() {
+      return `${this.data.stockPriceChangeSinceOpen.value} (${this.data.stockPriceChangeSinceOpen.percentage}%)`;
     }
   }
 });
@@ -171,8 +174,14 @@ export default defineComponent({
   align-items: center;
 
   gap: 0.25rem;
+}
 
+.stock-price-float-wrapper--positive {
   color: green;
+}
+
+.stock-price-float-wrapper--negative {
+  color: red;
 }
 
 .company-summary-wrapper {

@@ -4,19 +4,8 @@
       width="100%"
       height="100%"
       type="area"
+      :series="chartSeries"
       :options="chartOptions"
-      :series="[
-        {
-          data: [
-            [1, 4],
-            [2, 5],
-            [3, 6],
-            [4, 7],
-            [5, 8],
-            [6, 9]
-          ]
-        }
-      ]"
     />
   </div>
 </template>
@@ -24,19 +13,41 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
+import type { StockChartDestructured } from '@/types';
+
 export default defineComponent({
   name: 'CompanyStockChartSection',
   computed: {
     theme() {
       return this.$store.getters['theme/currentTheme'];
     },
+    stockChart() {
+      return this.$store.getters['stock/stockChart'].chart.result[0];
+    },
+    chartSeries() {
+      const { indicators, timestamp } = this
+        .stockChart as StockChartDestructured;
+
+      const quoteValues = indicators.quote[0].close as any[];
+      const timestampValues = timestamp as number[];
+
+      const fmtStockQuotation: [number, number][] = quoteValues.map(
+        (value, i) => [timestampValues[i], value?.toFixed(2)]
+      );
+
+      return [
+        {
+          data: fmtStockQuotation
+        }
+      ];
+    },
     chartOptions() {
       return {
         xaxis: {
-          seriesName: 'Time',
+          seriesName: 'Timestamp',
           labels: {
-            show: false
-            // formatter: (value: number) => 'Time: ' + this.parseTime(value)
+            show: false,
+            formatter: this.parseDate
           },
           axisTicks: {
             show: false
@@ -46,13 +57,9 @@ export default defineComponent({
           }
         },
         yaxis: {
-          seriesName: 'Price',
+          seriesName: 'Stock price',
           labels: {
-            // formatter: (value: number) => {
-            //   const symbol = this.data.meta.symbol as string;
-            //   const fmtPrice = '$ ' + value.toFixed(2);
-            //   return symbol.endsWith('.SA') ? 'R' + fmtPrice : fmtPrice;
-            // }
+            formatter: (value: number) => value.toFixed(2)
           },
           axisTicks: {
             show: false
@@ -81,24 +88,15 @@ export default defineComponent({
           shared: true,
           followCursor: true,
           style: {
-            fontSize: '12px'
-          },
-          onDatasetHover: {
-            highlightDataSeries: false
-          },
-          x: {
-            show: true,
-            format: 'dd MMM'
-            // formatter: undefined
+            fontSize: '14px'
           },
           y: {
-            formatter: undefined,
             title: {
-              // formatter: (seriesName) => seriesName
+              formatter: () => ''
             }
           },
           marker: {
-            show: false
+            show: true
           },
           fixed: {
             enabled: false,
@@ -106,6 +104,16 @@ export default defineComponent({
           }
         }
       };
+    }
+  },
+  methods: {
+    parseDate(value: number) {
+      return new Date(value * 1000).toLocaleString('en-US', {
+        minute: 'numeric',
+        hour: 'numeric',
+        day: 'numeric',
+        month: 'short'
+      });
     }
   }
 });

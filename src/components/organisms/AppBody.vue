@@ -1,12 +1,18 @@
 <template>
   <div class="app-body-wrapper">
-    <CompanyOverviewSection />
+    <CompanyOverviewSection :data="overviewData" />
+
     <div class="company-stock-chart-and-statistics-wrapper">
       <div class="company-stock-chart-and-time-series-statistics-wrapper">
         <CompanyStockChartSection />
-        <CompanyStockStatisticsSection />
+        <CompanyStockStatisticsSection
+          :data="stockStatisticsData.baseStatistics"
+        />
       </div>
-      <CompanyFinancialStatisticsSection />
+
+      <CompanyFinancialStatisticsSection
+        :data="stockStatisticsData.financialStatistics"
+      />
     </div>
   </div>
 </template>
@@ -18,6 +24,7 @@ import CompanyFinancialStatisticsSection from '@/components/molecules/CompanyFin
 import CompanyOverviewSection from '@/components/molecules/CompanyOverviewSection.vue';
 import CompanyStockChartSection from '@/components/molecules/CompanyStockChartSection.vue';
 import CompanyStockStatisticsSection from '@/components/molecules/CompanyStockStatisticsSection.vue';
+import type { StockChart, StockData, Stock } from '@/types';
 
 export default defineComponent({
   name: 'AppBody',
@@ -26,6 +33,101 @@ export default defineComponent({
     CompanyStockChartSection,
     CompanyStockStatisticsSection,
     CompanyFinancialStatisticsSection
+  },
+  computed: {
+    stock() {
+      const stockData = this.$store.getters['stock/stockData'] as StockData;
+      const stockChart = this.$store.getters['stock/stockChart'] as StockChart;
+
+      return {
+        data: stockData.quoteSummary.result[0],
+        chart: stockChart.chart.result[0]
+      };
+    },
+    overviewData() {
+      const { data, chart } = this.stock as Stock;
+
+      const fmtData = {
+        uuid: data.quoteType.uuid,
+        companyName: data.quoteType.longName,
+        companyBusinessSummary: data.assetProfile.longBusinessSummary,
+        companyWebsite: data.assetProfile.website,
+        stockSymbol: data.quoteType.symbol,
+        stockExchange: data.quoteType.exchange,
+        stockFinancialCurrency: data.financialData.financialCurrency,
+        currentStockPrice: data.financialData.currentPrice.fmt,
+        stockPriceChangeSinceOpen: {
+          value: (
+            data.financialData.currentPrice.raw - chart.meta.previousClose
+          ).toFixed(2),
+          percentage: (
+            (data.financialData.currentPrice.raw / chart.meta.previousClose -
+              1) *
+            100
+          ).toFixed(2)
+        }
+      };
+
+      return fmtData;
+    },
+    stockStatisticsData() {
+      const { data, chart } = this.stock as Stock;
+
+      const fmtData = {
+        baseStatistics: {
+          analystRecommendation: data.financialData.recommendationKey,
+          previousClosePrice: chart.meta.previousClose,
+          fiftyTwoWeekChange: data.defaultKeyStatistics['52WeekChange'].raw,
+          fiftyTwoWeekHigh: data.financialData.targetMeanPrice.fmt,
+          fiftyTwoWeekLow: data.financialData.targetLowPrice.fmt,
+          stockFinancialCurrency: data.financialData.financialCurrency
+        },
+        financialStatistics: {
+          enterpriseValue: data.defaultKeyStatistics.enterpriseValue.fmt,
+          forwardPriceToEarnings: data.defaultKeyStatistics.forwardPE.fmt,
+          pegRatio: data.defaultKeyStatistics.pegRatio.fmt,
+          priceToBook: data.defaultKeyStatistics.priceToBook.fmt,
+          enterpriseValueToRevenue:
+            data.defaultKeyStatistics.enterpriseToRevenue.fmt,
+          enterpriseValueToEbitda:
+            data.defaultKeyStatistics.enterpriseToEbitda.fmt,
+          fiscalYearEnds: data.defaultKeyStatistics.lastFiscalYearEnd.fmt,
+          mostRecentQuarter: data.defaultKeyStatistics.mostRecentQuarter.fmt,
+          profitMargin: data.financialData.profitMargins.fmt,
+          operatingMargin: data.financialData.operatingMargins.fmt,
+          revenue: data.financialData.totalRevenue.fmt,
+          revenuePerShare: data.financialData.revenuePerShare.fmt,
+          quarterlyRevenueGrowth: data.financialData.revenueGrowth.fmt,
+          grossProfit: data.financialData.grossProfits.fmt,
+          ebitda: data.financialData.ebitda.fmt,
+          netIncomeToCommon: data.defaultKeyStatistics.netIncomeToCommon.fmt,
+          dilutedEarningsPerShare: data.defaultKeyStatistics.trailingEps.fmt,
+          quarterlyEarningsGrowth:
+            data.defaultKeyStatistics.quarterlyEarningsGrowth,
+          returnOnAssets: data.financialData.returnOnAssets.fmt,
+          returnOnEquity: data.financialData.returnOnEquity.fmt,
+          totalCash: data.financialData.totalCash.fmt,
+          totalCashPerShare: data.financialData.totalCashPerShare.fmt,
+          totalDebt: data.financialData.totalDebt.fmt,
+          totalDebtToEquity: data.financialData.debtToEquity.fmt,
+          currentRatio: data.financialData.currentRatio.fmt,
+          operatingCashFlow: data.financialData.operatingCashflow.fmt,
+          leveredFreeCashFlow: data.financialData.freeCashflow.fmt,
+          sharesOutstanding: data.defaultKeyStatistics.sharesOutstanding.fmt,
+          sharesFloat: data.defaultKeyStatistics.floatShares.fmt,
+          sharesHeldByInsiders:
+            data.defaultKeyStatistics.heldPercentInsiders.fmt,
+          sharesHeldByInstitutions:
+            data.defaultKeyStatistics.heldPercentInstitutions.fmt,
+          dividendDate: data.defaultKeyStatistics.lastDividendDate.fmt,
+          lastDividendValue: data.defaultKeyStatistics.lastDividendValue.fmt,
+          lastSplitDate: data.defaultKeyStatistics.lastSplitDate.fmt,
+          lastSplitFactor: data.defaultKeyStatistics.lastSplitFactor
+        }
+      };
+
+      return fmtData;
+    }
   }
 });
 </script>
