@@ -13,7 +13,7 @@ export default defineConfig({
       template: { transformAssetUrls }
     }),
     quasar({
-      autoImportComponentCase: 'kebab',
+      autoImportComponentCase: 'pascal',
       sassVariables: 'src/quasar-variables.sass'
     })
   ]

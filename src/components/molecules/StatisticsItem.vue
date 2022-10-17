@@ -1,26 +1,26 @@
 <template>
-  <div class="statistics-item-wrapper">
+  <div :class="statisticsItemStyles">
     <span>
-      {{ longLabel }}
-      <span class="statistics-item-subtitle">{{ shortLabel }}</span>
+      {{ label }}
+      <span class="statistics-item-abbreviation">{{ labelAbbreviation }}</span>
     </span>
-    <b>{{ parsedValue }}</b>
+    <strong>{{ parsedValue }}</strong>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-import { StatisticsItemProps } from '@/types';
+import type { StatisticsItemProps } from '@/types';
 
 export default defineComponent({
   name: 'StatisticsItem',
   props: {
-    longLabel: {
+    label: {
       type: String,
       required: true
     },
-    shortLabel: {
+    labelAbbreviation: {
       type: String,
       required: false,
       default: ''
@@ -31,8 +31,16 @@ export default defineComponent({
     }
   } as StatisticsItemProps,
   computed: {
+    theme() {
+      return this.$store.getters['theme/currentTheme'];
+    },
+    statisticsItemStyles() {
+      return this.theme === 'dark'
+        ? 'statistics-item-wrapper statistics-item-wrapper__dark'
+        : 'statistics-item-wrapper';
+    },
     parsedValue() {
-      return !this.value ? 'N/A' : (this.value as string);
+      return this.value ? this.value : '-';
     }
   }
 });
@@ -40,17 +48,25 @@ export default defineComponent({
 
 <style scoped>
 .statistics-item-wrapper {
-  width: 75%;
-
   display: flex;
   justify-content: space-between;
 
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #ebedf3;
 
-  line-height: 38px;
+  padding: 0 0.5rem;
+
+  line-height: 30px;
 }
 
-.statistics-item-subtitle {
-  color: #838383;
+.statistics-item-wrapper__dark {
+  border-bottom: 1px solid #353535;
+}
+
+.statistics-item-abbreviation {
+  color: #9b9b9b;
+}
+
+.statistics-item-wrapper__dark .statistics-item-abbreviation {
+  color: #6b6b6b;
 }
 </style>

@@ -1,15 +1,17 @@
+import type { StockState } from '@/types';
+
 import actions from './actions';
 import getters from './getters';
 import mutations from './mutations';
 
 export default {
   namespaced: true,
-  state() {
+  state(): StockState {
     return {
       isLoading: false,
-      isFetched: false,
+      isFetching: false,
       error: null,
-      stockOverview: null,
+      stockData: null,
       stockChart: null
     };
   },
