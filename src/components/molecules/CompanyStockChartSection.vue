@@ -14,6 +14,7 @@
 import { defineComponent } from 'vue';
 
 import type { StockChartDestructured } from '@/types';
+import { parseCurrency } from '@/utils/functions/parseCurrency';
 
 export default defineComponent({
   name: 'CompanyStockChartSection',
@@ -22,7 +23,7 @@ export default defineComponent({
       return this.$store.getters['theme/currentTheme'];
     },
     stockChart() {
-      return this.$store.getters['stock/stockChart'].chart.result[0];
+      return this.$store.getters['stock/stockChart'];
     },
     chartSeries() {
       const { indicators, timestamp } = this
@@ -59,7 +60,8 @@ export default defineComponent({
         yaxis: {
           seriesName: 'Stock price',
           labels: {
-            formatter: (value: number) => value.toFixed(2)
+            formatter: (value: number) =>
+              `${this.parsedCurrency()} ${value.toFixed(2)}`
           },
           axisTicks: {
             show: false
@@ -114,6 +116,9 @@ export default defineComponent({
         day: 'numeric',
         month: 'short'
       });
+    },
+    parsedCurrency() {
+      return parseCurrency(this.stockChart.meta.currency);
     }
   }
 });
@@ -126,5 +131,23 @@ export default defineComponent({
   margin-top: -4.5rem;
 
   padding-right: 2rem;
+}
+
+@media (max-width: 1550px) {
+  .company-stock-chart-wrapper {
+    margin-top: unset;
+  }
+}
+@media (max-width: 1190px) {
+  .company-stock-chart-wrapper {
+    height: 25rem;
+
+    padding-right: unset;
+  }
+}
+@media (max-width: 650px) {
+  .company-stock-chart-wrapper {
+    height: 20rem;
+  }
 }
 </style>

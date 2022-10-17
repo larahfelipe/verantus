@@ -56,4 +56,10 @@ export default defineComponent({
 .logo__dark > em {
   color: #ddd;
 }
+
+@media (max-width: 650px) {
+  .logo-wrapper {
+    display: none;
+  }
+}
 </style>

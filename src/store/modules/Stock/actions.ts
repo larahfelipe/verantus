@@ -11,21 +11,23 @@ export default {
       exchange = '',
       modules = config.yahooFinanceApiModules
     } = payload;
-    if (!symbol.length) return console.log('Stock symbol is required.');
+    if (!symbol.length) {
+      context.commit('setError', 'Stock symbol is required');
+      return;
+    }
 
     try {
+      context.commit('setError', null);
       context.commit('setIsLoading', true);
 
       const fmtStockSymbol = symbol + exchange;
       const endpointUrl = `/v11/finance/quoteSummary/${fmtStockSymbol}?modules=${modules}`;
 
-      const { status, data }: AxiosResponse<StockData> = await api.get(
-        endpointUrl
-      );
-      if (status !== 200)
-        throw new Error('Some error occurred while fetching stock data.');
+      const { data }: AxiosResponse<StockData> = await api.get(endpointUrl);
+      const { result, error } = data.quoteSummary;
+      if (error) throw new Error(error.code);
 
-      context.commit('setStockData', data);
+      context.commit('setStockData', result[0]);
     } catch (e) {
       context.commit('setError', e);
     } finally {
@@ -34,21 +36,23 @@ export default {
   },
   async fetchStockChart(context, payload) {
     const { symbol, exchange = '', range = '1d' } = payload;
-    if (!symbol.length) return console.log('Stock symbol is required.');
+    if (!symbol.length) {
+      context.commit('setError', 'Stock symbol is required');
+      return;
+    }
 
     try {
+      context.commit('setError', null);
       context.commit('setIsLoading', true);
 
       const fmtStockSymbol = symbol + exchange;
       const endpointUrl = `/v8/finance/chart/${fmtStockSymbol}?range=${range}`;
 
-      const { status, data }: AxiosResponse<StockChart> = await api.get(
-        endpointUrl
-      );
-      if (status !== 200)
-        throw new Error('Some error occurred while fetching stock chart.');
+      const { data }: AxiosResponse<StockChart> = await api.get(endpointUrl);
+      const { result, error } = data.chart;
+      if (error) throw new Error(error.code);
 
-      context.commit('setStockChart', data);
+      context.commit('setStockChart', result[0]);
     } catch (e) {
       context.commit('setError', e);
     } finally {

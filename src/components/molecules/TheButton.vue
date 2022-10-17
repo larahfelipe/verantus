@@ -1,5 +1,5 @@
 <template>
-  <button :class="buttonStyles" :type="type">
+  <button :class="buttonStyles" :type="type" :disabled="disabled">
     <slot />
   </button>
 </template>
@@ -16,6 +16,11 @@ export default defineComponent({
       type: String,
       required: false,
       default: 'button'
+    },
+    disabled: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   } as ButtonProps,
   computed: {
@@ -56,7 +61,7 @@ export default defineComponent({
   filter: brightness(1.2);
 }
 
-.button:active {
+.button:active:not(:disabled) {
   transform: scale(0.9);
 }
 </style>

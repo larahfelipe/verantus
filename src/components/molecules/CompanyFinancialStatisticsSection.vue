@@ -199,6 +199,7 @@
 import { defineComponent } from 'vue';
 
 import StatisticsItem from '@/components/molecules/StatisticsItem.vue';
+import { parseDate as parseDateUtil } from '@/utils/functions/parseDate';
 
 export default defineComponent({
   name: 'CompanyFinancialStatisticsSection',
@@ -228,11 +229,14 @@ export default defineComponent({
   },
   methods: {
     parseDate(value: string) {
-      return new Date(value).toLocaleString('en-US', {
-        month: 'long',
+      const fmtValue = parseDateUtil(value, {
+        month: 'short',
         day: 'numeric',
         year: 'numeric'
       });
+      if (!fmtValue) return '-';
+
+      return fmtValue;
     }
   }
 });
@@ -295,5 +299,18 @@ export default defineComponent({
 
 .company-financial-statistics-section-wrapper__dark h6 {
   background-color: #1f2122;
+}
+
+@media (max-width: 1550px) {
+  .company-financial-statistics-section-wrapper {
+    padding-top: unset;
+  }
+}
+@media (max-width: 1190px) {
+  .company-financial-statistics-section-wrapper {
+    width: 100%;
+
+    margin-top: 3rem;
+  }
 }
 </style>

@@ -3,10 +3,12 @@
     <input
       v-model.trim="value"
       :class="inputFieldStyles"
-      :placeholder="placeholder"
       :type="type"
+      :disabled="disabled"
+      :placeholder="placeholder"
       @change="onChange"
     />
+    <p v-if="error" class="input-error-text">{{ error }}</p>
   </div>
 </template>
 
@@ -24,6 +26,16 @@ export default defineComponent({
       default: 'text'
     },
     placeholder: {
+      type: String,
+      required: false,
+      default: ''
+    },
+    disabled: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    error: {
       type: String,
       required: false,
       default: ''
@@ -47,7 +59,7 @@ export default defineComponent({
   },
   methods: {
     onChange() {
-      this.$emit('on-change', this.value.toUpperCase());
+      this.$emit('on-change', this.value);
     }
   }
 });
@@ -58,6 +70,7 @@ export default defineComponent({
   width: 50%;
 
   display: flex;
+  flex-direction: column;
   justify-content: center;
 }
 
@@ -100,5 +113,14 @@ input:hover:not(:focus) {
 input:focus {
   border: 1px solid #00ff80;
   transform: scale(1.05);
+}
+
+.input-error-text {
+  position: absolute;
+  top: 5rem;
+
+  font-size: 16px;
+
+  color: #ff0000;
 }
 </style>

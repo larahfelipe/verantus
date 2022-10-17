@@ -41,6 +41,9 @@ export default defineComponent({
   width: 15rem;
   height: 7.25rem;
 
+  min-width: 10rem;
+  min-height: 7rem;
+
   display: flex;
   flex-direction: column;
 
@@ -88,5 +91,36 @@ export default defineComponent({
   margin-left: 1.6rem;
 
   font-size: 28px;
+}
+
+@media (max-width: 1550px) {
+  .statistics-card-wrapper {
+    width: 11.5rem;
+    height: 7rem;
+  }
+  .statistics-card-wrapper h6 {
+    margin-left: unset;
+
+    font-size: 14px;
+  }
+  .statistics-card-content-wrapper {
+    margin-left: unset;
+  }
+}
+@media (max-width: 1190px) {
+  .statistics-card-wrapper {
+    width: 13rem;
+  }
+  .statistics-card-content-wrapper {
+    margin-left: 1rem;
+  }
+}
+@media (max-width: 1045px) {
+  .statistics-card-wrapper {
+    width: 11rem;
+  }
+  .statistics-card-content-wrapper {
+    margin-left: 0.5rem;
+  }
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div :class="dashboardTemplateStyles">
-    <AppHeader @on-search="getStockData" />
+    <AppHeader @on-search="getStock" />
     <LoadingSpinner v-if="isFetching" />
     <AppBody v-else />
   </div>
@@ -56,11 +56,14 @@ export default defineComponent({
     this.$store.commit('stock/setIsFetching', false);
   },
   methods: {
-    async getStockData(payload: StockPayload) {
-      this.$store.commit('stock/setIsFetching', true);
-      await this.$store.dispatch('stock/fetchStockData', payload);
-      await this.$store.dispatch('stock/fetchStockChart', payload);
-      this.$store.commit('stock/setIsFetching', false);
+    async getStock(payload: StockPayload) {
+      try {
+        this.$store.commit('stock/setIsFetching', true);
+        await this.$store.dispatch('stock/fetchStockData', payload);
+        await this.$store.dispatch('stock/fetchStockChart', payload);
+      } finally {
+        this.$store.commit('stock/setIsFetching', false);
+      }
     }
   }
 });
@@ -77,5 +80,11 @@ export default defineComponent({
 
 .app-wrapper__dark {
   background-color: #18191c;
+}
+
+@media (max-width: 1550px) {
+  .app-wrapper {
+    width: 100%;
+  }
 }
 </style>

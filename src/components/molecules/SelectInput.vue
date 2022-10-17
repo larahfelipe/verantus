@@ -1,6 +1,10 @@
 <template>
   <div v-if="options" class="select-input-wrapper">
-    <select v-model="selectValue" :class="selectInputStyles">
+    <select
+      v-model="selectValue"
+      :class="selectInputStyles"
+      :disabled="disabled"
+    >
       <option
         v-for="option in options"
         :key="option.value"
@@ -24,6 +28,11 @@ export default defineComponent({
       type: Array,
       required: true,
       default: [] as SelectOption[]
+    },
+    disabled: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   } as SelectInputProps,
   emits: ['on-change'],
