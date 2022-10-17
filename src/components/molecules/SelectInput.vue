@@ -1,7 +1,11 @@
 <template>
   <div v-if="options" class="select-input-wrapper">
     <select v-model="selectValue" :class="selectInputStyles">
-      <option v-for="option in options" :key="option" :value="option.value">
+      <option
+        v-for="option in options"
+        :key="option.value"
+        :value="option.value"
+      >
         {{ option.label }}
       </option>
     </select>
