@@ -54,6 +54,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
+import { parseCurrency } from '@/utils/functions/parseCurrency';
+
 export default defineComponent({
   name: 'CompanyOverviewSection',
   props: {
@@ -83,13 +85,13 @@ export default defineComponent({
     },
     fmtStockSymbol() {
       return this.data.stockSymbol.endsWith('.SA')
-        ? this.data.stockSymbol.slice(0, -3)
+        ? this.data.stockSymbol.split('.')[0]
         : this.data.stockSymbol;
     },
     fmtStockPrice() {
-      const currency = this.data.stockFinancialCurrency === 'USD' ? '$' : 'R$';
-
-      return `${currency} ${this.data.currentStockPrice}`;
+      return `${parseCurrency(this.data.stockFinancialCurrency)} ${
+        this.data.currentStockPrice
+      }`;
     },
     fmtStockPriceFloat() {
       return `${this.data.stockPriceChangeSinceOpen.value} (${this.data.stockPriceChangeSinceOpen.percentage}%)`;
@@ -230,5 +232,83 @@ export default defineComponent({
 
 .company-description-wrapper__dark::-webkit-scrollbar-thumb:hover {
   background-color: #767676;
+}
+
+@media (max-width: 1550px) {
+  .company-overview-section-wrapper {
+    height: 30%;
+
+    flex-direction: column;
+  }
+  .company-name-and-stock-details-wrapper {
+    width: 100%;
+  }
+  .company-name-and-exchange-wrapper {
+    margin-left: unset;
+  }
+  .company-stock-price-wrapper {
+    margin-right: unset;
+  }
+  .company-summary-wrapper {
+    width: 100%;
+    max-height: 18rem;
+
+    margin-top: 1.75rem;
+  }
+}
+@media (max-width: 1045px) {
+  .company-name-and-exchange-wrapper h2 {
+    font-size: 48px;
+  }
+  .company-stock-exchange-wrapper h4 {
+    font-size: 26px;
+  }
+  .stock-exchange-name-wrapper h6 {
+    font-size: 18px;
+  }
+  .company-stock-price-wrapper h3 {
+    font-size: 32px;
+  }
+  .stock-price-float-wrapper h6 {
+    font-size: 16px;
+  }
+}
+@media (max-width: 770px) {
+  .company-name-and-exchange-wrapper h2 {
+    font-size: 36px;
+  }
+  .company-stock-exchange-wrapper h4 {
+    font-size: 20px;
+  }
+  .stock-exchange-name-wrapper h6 {
+    font-size: 14px;
+  }
+  .company-stock-price-wrapper h3 {
+    font-size: 24px;
+  }
+  .stock-price-float-wrapper h6 {
+    font-size: 12px;
+  }
+}
+@media (max-width: 600px) {
+  .company-name-and-stock-details-wrapper {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .company-name-and-exchange-wrapper {
+    margin-top: 0.75rem;
+  }
+  .company-stock-exchange-wrapper {
+    margin-top: unset;
+  }
+  .company-stock-price-wrapper {
+    flex-direction: row;
+    align-items: center;
+
+    margin-top: -1.5rem;
+  }
+  .company-summary-wrapper {
+    margin-top: 2.75rem;
+  }
 }
 </style>

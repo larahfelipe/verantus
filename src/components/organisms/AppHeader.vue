@@ -6,15 +6,21 @@
       <div class="fields-wrapper">
         <InputField
           placeholder="Search stock by its symbol e.g. AAPL"
+          :disabled="isFetching"
+          :error="error"
           @on-change="setEnteredSymbol"
         />
         <SelectInput
           :options="selectOptions"
+          :disabled="isFetching"
           @on-change="setSelectedExchange"
         />
       </div>
 
-      <TheButton @click="handleClick">
+      <TheButton
+        :disabled="isFetching || !hasEnteredSymbol"
+        @click="handleClick"
+      >
         <QIcon name="bi-search" />
       </TheButton>
     </div>
@@ -67,6 +73,15 @@ export default defineComponent({
   computed: {
     theme() {
       return this.$store.getters['theme/currentTheme'];
+    },
+    isFetching() {
+      return this.$store.getters['stock/isFetching'];
+    },
+    hasEnteredSymbol() {
+      return !!this.stockPayload.symbol.length;
+    },
+    error() {
+      return this.$store.getters['stock/error'];
     }
   },
   created() {
@@ -74,7 +89,7 @@ export default defineComponent({
   },
   methods: {
     setEnteredSymbol(value: string) {
-      this.stockPayload.symbol = value;
+      this.stockPayload.symbol = value.toUpperCase();
     },
     setSelectedExchange(value: string) {
       this.stockPayload.exchange = value;
@@ -120,5 +135,18 @@ export default defineComponent({
   align-items: center;
 
   margin-right: 1rem;
+}
+
+@media (max-width: 650px) {
+  .search-wrapper {
+    width: 80%;
+
+    margin-left: 1rem;
+  }
+}
+@media (max-width: 545px) {
+  .search-wrapper {
+    width: 72.5%;
+  }
 }
 </style>

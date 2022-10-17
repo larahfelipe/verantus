@@ -36,6 +36,7 @@
 import { defineComponent } from 'vue';
 
 import StatisticsCardProps from '@/components/molecules/StatisticsCard.vue';
+import { parseCurrency } from '@/utils/functions/parseCurrency';
 
 export default defineComponent({
   name: 'CompanyStockStatisticsSection',
@@ -60,7 +61,7 @@ export default defineComponent({
         : 'week-change-wrapper week-change-wrapper--negative';
     },
     parsedCurrency() {
-      return this.data.stockFinancialCurrency === 'USD' ? '$' : 'R$';
+      return parseCurrency(this.data.stockFinancialCurrency);
     },
     fmtPreviousClose() {
       return `${this.parsedCurrency} ${this.data.previousClosePrice}`;
@@ -120,5 +121,22 @@ export default defineComponent({
 .recommendation-text-wrapper--sell,
 .week-change-wrapper--negative {
   color: red;
+}
+
+@media (max-width: 1550px) {
+  .company-stock-statistics-section-wrapper {
+    width: 100%;
+    height: 40%;
+
+    justify-content: space-between;
+
+    gap: 0.5rem;
+    padding-top: unset;
+
+    overflow-x: auto;
+  }
+  .company-stock-statistics-section-wrapper span {
+    font-size: 22px;
+  }
 }
 </style>

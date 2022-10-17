@@ -24,7 +24,11 @@ import CompanyFinancialStatisticsSection from '@/components/molecules/CompanyFin
 import CompanyOverviewSection from '@/components/molecules/CompanyOverviewSection.vue';
 import CompanyStockChartSection from '@/components/molecules/CompanyStockChartSection.vue';
 import CompanyStockStatisticsSection from '@/components/molecules/CompanyStockStatisticsSection.vue';
-import type { StockChart, StockData, Stock } from '@/types';
+import type {
+  StockChartDestructured,
+  StockDataDestructured,
+  Stock
+} from '@/types';
 
 export default defineComponent({
   name: 'AppBody',
@@ -36,12 +40,16 @@ export default defineComponent({
   },
   computed: {
     stock() {
-      const stockData = this.$store.getters['stock/stockData'] as StockData;
-      const stockChart = this.$store.getters['stock/stockChart'] as StockChart;
+      const stockData = this.$store.getters[
+        'stock/stockData'
+      ] as StockDataDestructured;
+      const stockChart = this.$store.getters[
+        'stock/stockChart'
+      ] as StockChartDestructured;
 
       return {
-        data: stockData.quoteSummary.result[0],
-        chart: stockChart.chart.result[0]
+        data: stockData,
+        chart: stockChart
       };
     },
     overviewData() {
@@ -156,5 +164,28 @@ export default defineComponent({
 
   display: flex;
   flex-direction: column;
+}
+
+@media (max-width: 1550px) {
+  .company-stock-chart-and-statistics-wrapper {
+    height: 70%;
+
+    margin-top: 18rem;
+  }
+}
+@media (max-width: 1190px) {
+  .company-stock-chart-and-statistics-wrapper {
+    flex-direction: column;
+  }
+  .company-stock-chart-and-time-series-statistics-wrapper {
+    width: 100%;
+
+    flex-direction: column;
+  }
+}
+@media (max-width: 770px) {
+  .app-body-wrapper {
+    padding: 1rem;
+  }
 }
 </style>

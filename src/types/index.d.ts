@@ -28,6 +28,8 @@ type ComponentProps<T = unknown> = {
 export type InputFieldProps = {
   type: ComponentProps<string>;
   placeholder: ComponentProps<string>;
+  disabled: ComponentProps<boolean>;
+  error: ComponentProps<string>;
 };
 
 export type SelectOption = {
@@ -37,12 +39,14 @@ export type SelectOption = {
 
 export type SelectInputProps = {
   options: ComponentProps<SelectOption[]>;
+  disabled: ComponentProps<boolean>;
 };
 
 export type ButtonType = 'submit' | 'button' | 'reset';
 
 export type ButtonProps = {
   type: ComponentProps<ButtonType>;
+  disabled: ComponentProps<boolean>;
 };
 
 export type ToggleInputProps = {
@@ -139,6 +143,10 @@ export type StockData = {
         };
       }
     ];
+    error: {
+      code: string;
+      description: string;
+    };
   };
 };
 
@@ -178,6 +186,10 @@ export type StockChart = {
         };
       }
     ];
+    error: {
+      code: string;
+      description: string;
+    };
   };
 };
 
@@ -185,33 +197,38 @@ export type StockState = {
   isLoading: boolean;
   isFetching: boolean;
   error: any;
-  stockData: StockData | null;
-  stockChart: StockChart | null;
+  stockData: StockDataDestructured | null;
+  stockChart: StockChartDestructured | null;
+};
+
+type Error = {
+  code: string;
+  description: string;
 };
 
 export type StockGetters = {
   isLoading: (state: StockState) => boolean;
   isFetching: (state: StockState) => boolean;
-  error: (state: StockState) => any;
-  stockData: (state: StockState) => StockData;
-  stockChart: (state: StockState) => StockChart;
+  error: (state: StockState) => Error | null;
+  stockData: (state: StockState) => StockDataDestructured;
+  stockChart: (state: StockState) => StockChartDestructured;
 };
 
 export type StockMutations = {
   setIsLoading: (state: StockState, payload: boolean) => void;
   setIsFetching: (state: StockState, payload: boolean) => void;
   setError: (state: StockState, payload: boolean) => void;
-  setStockData: (state: StockState, payload: StockData) => void;
-  setStockChart: (state: StockState, payload: StockChart) => void;
+  setStockData: (state: StockState, payload: StockDataDestructured) => void;
+  setStockChart: (state: StockState, payload: StockChartDestructured) => void;
 };
 
 export type StockActions = {
   fetchStockData: (
-    context: ActionContext<StockData, unknown>,
+    context: ActionContext<StockDataDestructured, unknown>,
     payload: StockPayload
   ) => void;
   fetchStockChart: (
-    context: ActionContext<StockData, unknown>,
+    context: ActionContext<StockChartDestructured, unknown>,
     payload: StockPayload
   ) => void;
 };
