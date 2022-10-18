@@ -310,7 +310,7 @@ export default defineComponent({
   .company-financial-statistics-section-wrapper {
     width: 100%;
 
-    margin-top: 3rem;
+    margin-top: 2.5rem;
   }
 }
 </style>

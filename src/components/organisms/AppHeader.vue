@@ -139,14 +139,14 @@ export default defineComponent({
 
 @media (max-width: 650px) {
   .search-wrapper {
-    width: 80%;
+    width: 82.5%;
 
     margin-left: 1rem;
   }
 }
 @media (max-width: 545px) {
   .search-wrapper {
-    width: 72.5%;
+    width: 78.5%;
   }
 }
 </style>
