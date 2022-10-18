@@ -67,4 +67,12 @@ export default defineComponent({
 
   margin-right: 1.5rem;
 }
+
+@media (max-width: 650px) {
+  .toggle-input-wrapper {
+    width: 10%;
+
+    margin-right: unset;
+  }
+}
 </style>

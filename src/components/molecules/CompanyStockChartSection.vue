@@ -142,6 +142,8 @@ export default defineComponent({
   .company-stock-chart-wrapper {
     height: 25rem;
 
+    margin-top: 2.5rem;
+
     padding-right: unset;
   }
 }

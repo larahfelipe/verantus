@@ -253,12 +253,15 @@ export default defineComponent({
     width: 100%;
     max-height: 18rem;
 
-    margin-top: 1.75rem;
+    margin-top: 2rem;
   }
 }
 @media (max-width: 1045px) {
   .company-name-and-exchange-wrapper h2 {
     font-size: 48px;
+  }
+  .company-stock-exchange-wrapper {
+    margin-top: 0.5rem;
   }
   .company-stock-exchange-wrapper h4 {
     font-size: 26px;
@@ -269,6 +272,9 @@ export default defineComponent({
   .company-stock-price-wrapper h3 {
     font-size: 32px;
   }
+  .stock-price-float-wrapper {
+    margin-top: unset;
+  }
   .stock-price-float-wrapper h6 {
     font-size: 16px;
   }
@@ -276,6 +282,9 @@ export default defineComponent({
 @media (max-width: 770px) {
   .company-name-and-exchange-wrapper h2 {
     font-size: 36px;
+  }
+  .company-stock-exchange-wrapper {
+    align-items: center;
   }
   .company-stock-exchange-wrapper h4 {
     font-size: 20px;
@@ -296,7 +305,7 @@ export default defineComponent({
     align-items: flex-start;
   }
   .company-name-and-exchange-wrapper {
-    margin-top: 0.75rem;
+    margin-top: 0.5rem;
   }
   .company-stock-exchange-wrapper {
     margin-top: unset;
