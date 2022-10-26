@@ -29,7 +29,10 @@ export default {
 
       context.commit('setStockData', result[0]);
     } catch (e) {
-      context.commit('setError', e);
+      context.commit(
+        'setError',
+        'Something went wrong while fetching stock data. Please try again later.'
+      );
     } finally {
       context.commit('setIsLoading', false);
     }
@@ -54,7 +57,10 @@ export default {
 
       context.commit('setStockChart', result[0]);
     } catch (e) {
-      context.commit('setError', e);
+      context.commit(
+        'setError',
+        'Something went wrong while fetching stock chart. Please try again later.'
+      );
     } finally {
       context.commit('setIsLoading', false);
     }
