@@ -19,6 +19,7 @@ export default defineComponent({
 @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&display=swap');
 
 * {
+  -webkit-appearance: none;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
