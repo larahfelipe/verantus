@@ -180,7 +180,7 @@ export default defineComponent({
     flex-direction: column;
 
     margin-top: 3rem;
-    gap: 1.5rem;
+    gap: 2.5rem;
   }
   .company-stock-chart-and-time-series-statistics-wrapper {
     width: 100%;

@@ -309,8 +309,6 @@ export default defineComponent({
 @media (max-width: 1190px) {
   .company-financial-statistics-section-wrapper {
     width: 100%;
-
-    margin-top: 2.5rem;
   }
 }
 </style>
