@@ -130,8 +130,8 @@ export default defineComponent({
 
     justify-content: space-between;
 
-    gap: 0.5rem;
-    padding-top: unset;
+    gap: 1rem;
+    padding: 0 1.5rem;
 
     overflow-x: auto;
   }

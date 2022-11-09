@@ -168,14 +168,19 @@ export default defineComponent({
 
 @media (max-width: 1550px) {
   .company-stock-chart-and-statistics-wrapper {
-    height: 70%;
+    height: 70vh;
 
-    margin-top: 18rem;
+    margin-top: 5rem;
   }
 }
 @media (max-width: 1190px) {
   .company-stock-chart-and-statistics-wrapper {
+    height: 100%;
+
     flex-direction: column;
+
+    margin-top: 3rem;
+    gap: 2.5rem;
   }
   .company-stock-chart-and-time-series-statistics-wrapper {
     width: 100%;
@@ -186,6 +191,9 @@ export default defineComponent({
 @media (max-width: 770px) {
   .app-body-wrapper {
     padding: 1rem;
+  }
+  .company-stock-chart-and-statistics-wrapper {
+    margin-top: 1rem;
   }
 }
 </style>

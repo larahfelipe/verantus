@@ -76,6 +76,12 @@ export default defineComponent({
         grid: {
           show: false
         },
+        theme: {
+          mode: this.theme
+        },
+        chart: {
+          background: 'inherit'
+        },
         colors:
           this.theme === 'dark'
             ? ['#009148', '#01c261']
