@@ -85,6 +85,7 @@ export default defineComponent({
 @media (max-width: 1550px) {
   .app-wrapper {
     width: 100%;
+    height: 100%;
   }
 }
 </style>
