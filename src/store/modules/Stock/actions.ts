@@ -17,7 +17,6 @@ export default {
     }
 
     try {
-      context.commit('setError', null);
       context.commit('setIsLoading', true);
 
       const fmtStockSymbol = symbol + exchange;
@@ -45,7 +44,6 @@ export default {
     }
 
     try {
-      context.commit('setError', null);
       context.commit('setIsLoading', true);
 
       const fmtStockSymbol = symbol + exchange;
@@ -63,6 +61,17 @@ export default {
       );
     } finally {
       context.commit('setIsLoading', false);
+    }
+  },
+  async fetchStock(context, payload) {
+    try {
+      context.commit('setError', null);
+      context.commit('setIsFetching', true);
+
+      await context.dispatch('fetchStockData', payload);
+      await context.dispatch('fetchStockChart', payload);
+    } finally {
+      context.commit('setIsFetching', false);
     }
   }
 } as StockActions;

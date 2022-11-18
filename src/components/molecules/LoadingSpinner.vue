@@ -20,5 +20,7 @@ export default defineComponent({
   display: flex;
   justify-content: center;
   align-items: center;
+
+  position: absolute;
 }
 </style>
