@@ -231,6 +231,10 @@ export type StockActions = {
     context: ActionContext<StockChartDestructured, unknown>,
     payload: StockPayload
   ) => void;
+  fetchStock: (
+    context: ActionContext<StockDataDestructured, unknown>,
+    payload: StockPayload
+  ) => void;
 };
 
 export type Theme = 'light' | 'dark';
@@ -245,4 +249,9 @@ export type ThemeGetters = {
 
 export type ThemeMutations = {
   setCurrentTheme: (state: ThemeState, payload: Theme) => void;
+};
+
+export type Store = {
+  stock: StockState;
+  theme: ThemeState;
 };

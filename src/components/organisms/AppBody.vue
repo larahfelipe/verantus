@@ -63,13 +63,13 @@ export default defineComponent({
         stockSymbol: data.quoteType.symbol,
         stockExchange: data.quoteType.exchange,
         stockFinancialCurrency: data.financialData.financialCurrency,
-        currentStockPrice: data.financialData.currentPrice.fmt,
+        currentStockPrice: data.financialData.currentPrice?.fmt,
         stockPriceChangeSinceOpen: {
           value: (
-            data.financialData.currentPrice.raw - chart.meta.previousClose
+            data.financialData.currentPrice?.raw - chart.meta.previousClose
           ).toFixed(2),
           percentage: (
-            (data.financialData.currentPrice.raw / chart.meta.previousClose -
+            (data.financialData.currentPrice?.raw / chart.meta.previousClose -
               1) *
             100
           ).toFixed(2)
@@ -85,51 +85,51 @@ export default defineComponent({
         baseStatistics: {
           analystRecommendation: data.financialData.recommendationKey,
           previousClosePrice: chart.meta.previousClose,
-          fiftyTwoWeekChange: data.defaultKeyStatistics['52WeekChange'].raw,
-          fiftyTwoWeekHigh: data.financialData.targetMeanPrice.fmt,
-          fiftyTwoWeekLow: data.financialData.targetLowPrice.fmt,
+          fiftyTwoWeekChange: data.defaultKeyStatistics['52WeekChange']?.raw,
+          fiftyTwoWeekHigh: data.financialData.targetMeanPrice?.fmt,
+          fiftyTwoWeekLow: data.financialData.targetLowPrice?.fmt,
           stockFinancialCurrency: data.financialData.financialCurrency
         },
         financialStatistics: {
-          enterpriseValue: data.defaultKeyStatistics.enterpriseValue.fmt,
-          forwardPriceToEarnings: data.defaultKeyStatistics.forwardPE.fmt,
-          pegRatio: data.defaultKeyStatistics.pegRatio.fmt,
-          priceToBook: data.defaultKeyStatistics.priceToBook.fmt,
+          enterpriseValue: data.defaultKeyStatistics.enterpriseValue?.fmt,
+          forwardPriceToEarnings: data.defaultKeyStatistics.forwardPE?.fmt,
+          pegRatio: data.defaultKeyStatistics.pegRatio?.fmt,
+          priceToBook: data.defaultKeyStatistics.priceToBook?.fmt,
           enterpriseValueToRevenue:
-            data.defaultKeyStatistics.enterpriseToRevenue.fmt,
+            data.defaultKeyStatistics.enterpriseToRevenue?.fmt,
           enterpriseValueToEbitda:
-            data.defaultKeyStatistics.enterpriseToEbitda.fmt,
-          fiscalYearEnds: data.defaultKeyStatistics.lastFiscalYearEnd.fmt,
-          mostRecentQuarter: data.defaultKeyStatistics.mostRecentQuarter.fmt,
-          profitMargin: data.financialData.profitMargins.fmt,
-          operatingMargin: data.financialData.operatingMargins.fmt,
-          revenue: data.financialData.totalRevenue.fmt,
-          revenuePerShare: data.financialData.revenuePerShare.fmt,
-          quarterlyRevenueGrowth: data.financialData.revenueGrowth.fmt,
-          grossProfit: data.financialData.grossProfits.fmt,
-          ebitda: data.financialData.ebitda.fmt,
-          netIncomeToCommon: data.defaultKeyStatistics.netIncomeToCommon.fmt,
-          dilutedEarningsPerShare: data.defaultKeyStatistics.trailingEps.fmt,
+            data.defaultKeyStatistics.enterpriseToEbitda?.fmt,
+          fiscalYearEnds: data.defaultKeyStatistics.lastFiscalYearEnd?.fmt,
+          mostRecentQuarter: data.defaultKeyStatistics.mostRecentQuarter?.fmt,
+          profitMargin: data.financialData.profitMargins?.fmt,
+          operatingMargin: data.financialData.operatingMargins?.fmt,
+          revenue: data.financialData.totalRevenue?.fmt,
+          revenuePerShare: data.financialData.revenuePerShare?.fmt,
+          quarterlyRevenueGrowth: data.financialData.revenueGrowth?.fmt,
+          grossProfit: data.financialData.grossProfits?.fmt,
+          ebitda: data.financialData.ebitda?.fmt,
+          netIncomeToCommon: data.defaultKeyStatistics.netIncomeToCommon?.fmt,
+          dilutedEarningsPerShare: data.defaultKeyStatistics.trailingEps?.fmt,
           quarterlyEarningsGrowth:
             data.defaultKeyStatistics.quarterlyEarningsGrowth,
-          returnOnAssets: data.financialData.returnOnAssets.fmt,
-          returnOnEquity: data.financialData.returnOnEquity.fmt,
-          totalCash: data.financialData.totalCash.fmt,
-          totalCashPerShare: data.financialData.totalCashPerShare.fmt,
-          totalDebt: data.financialData.totalDebt.fmt,
-          totalDebtToEquity: data.financialData.debtToEquity.fmt,
-          currentRatio: data.financialData.currentRatio.fmt,
-          operatingCashFlow: data.financialData.operatingCashflow.fmt,
-          leveredFreeCashFlow: data.financialData.freeCashflow.fmt,
-          sharesOutstanding: data.defaultKeyStatistics.sharesOutstanding.fmt,
-          sharesFloat: data.defaultKeyStatistics.floatShares.fmt,
+          returnOnAssets: data.financialData.returnOnAssets?.fmt,
+          returnOnEquity: data.financialData.returnOnEquity?.fmt,
+          totalCash: data.financialData.totalCash?.fmt,
+          totalCashPerShare: data.financialData.totalCashPerShare?.fmt,
+          totalDebt: data.financialData.totalDebt?.fmt,
+          totalDebtToEquity: data.financialData.debtToEquity?.fmt,
+          currentRatio: data.financialData.currentRatio?.fmt,
+          operatingCashFlow: data.financialData.operatingCashflow?.fmt,
+          leveredFreeCashFlow: data.financialData.freeCashflow?.fmt,
+          sharesOutstanding: data.defaultKeyStatistics.sharesOutstanding?.fmt,
+          sharesFloat: data.defaultKeyStatistics.floatShares?.fmt,
           sharesHeldByInsiders:
-            data.defaultKeyStatistics.heldPercentInsiders.fmt,
+            data.defaultKeyStatistics.heldPercentInsiders?.fmt,
           sharesHeldByInstitutions:
-            data.defaultKeyStatistics.heldPercentInstitutions.fmt,
-          dividendDate: data.defaultKeyStatistics.lastDividendDate.fmt,
-          lastDividendValue: data.defaultKeyStatistics.lastDividendValue.fmt,
-          lastSplitDate: data.defaultKeyStatistics.lastSplitDate.fmt,
+            data.defaultKeyStatistics.heldPercentInstitutions?.fmt,
+          dividendDate: data.defaultKeyStatistics.lastDividendDate?.fmt,
+          lastDividendValue: data.defaultKeyStatistics.lastDividendValue?.fmt,
+          lastSplitDate: data.defaultKeyStatistics.lastSplitDate?.fmt,
           lastSplitFactor: data.defaultKeyStatistics.lastSplitFactor
         }
       };

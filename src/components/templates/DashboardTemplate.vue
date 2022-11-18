@@ -15,7 +15,7 @@ import LoadingSpinner from '@/components/molecules/LoadingSpinner.vue';
 import AppBody from '@/components/organisms/AppBody.vue';
 import AppHeader from '@/components/organisms/AppHeader.vue';
 import config from '@/config';
-import type { StockPayload } from '@/types';
+import type { StockPayload, Store } from '@/types';
 
 export default defineComponent({
   name: 'DashboardTemplate',
@@ -44,26 +44,20 @@ export default defineComponent({
   },
   async created() {
     const hasStoredData = localStorage.getItem(config.appStorageKey);
-    if (hasStoredData) return;
+    if (hasStoredData) {
+      const storedData: Store = await JSON.parse(hasStoredData);
+      if (!storedData.stock.error) return;
+    }
 
     const payload = {
       symbol: 'AAPL'
     } as StockPayload;
 
-    this.$store.commit('stock/setIsFetching', true);
-    await this.$store.dispatch('stock/fetchStockData', payload);
-    await this.$store.dispatch('stock/fetchStockChart', payload);
-    this.$store.commit('stock/setIsFetching', false);
+    await this.getStock(payload);
   },
   methods: {
     async getStock(payload: StockPayload) {
-      try {
-        this.$store.commit('stock/setIsFetching', true);
-        await this.$store.dispatch('stock/fetchStockData', payload);
-        await this.$store.dispatch('stock/fetchStockChart', payload);
-      } finally {
-        this.$store.commit('stock/setIsFetching', false);
-      }
+      await this.$store.dispatch('stock/fetchStock', payload);
     }
   }
 });
