@@ -83,6 +83,8 @@ input {
 
   font-size: 16px;
 
+  border: 1px solid #ededf3;
+
   background-color: #ebedf3;
 
   transition: all 0.2s ease;
@@ -95,6 +97,9 @@ input::placeholder {
 
 .input-field__dark {
   color: #ddd;
+
+  border: 1px solid #202229;
+
   background-color: #202229;
 }
 
