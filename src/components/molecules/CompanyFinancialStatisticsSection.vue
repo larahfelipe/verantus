@@ -294,11 +294,11 @@ export default defineComponent({
   padding-left: 0.5rem;
   margin-bottom: 0.8rem;
 
-  background-color: #ebebeb;
+  background-color: #ebedf3;
 }
 
 .company-financial-statistics-section-wrapper__dark h6 {
-  background-color: #1f2122;
+  background-color: #202229;
 }
 
 @media (max-width: 1550px) {

@@ -148,7 +148,7 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
 
-  padding: 3rem;
+  padding: 2rem;
 }
 
 .company-stock-chart-and-statistics-wrapper {
@@ -164,13 +164,14 @@ export default defineComponent({
 
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 }
 
 @media (max-width: 1550px) {
   .company-stock-chart-and-statistics-wrapper {
     height: 70vh;
 
-    margin-top: 5rem;
+    margin-top: 2rem;
   }
 }
 @media (max-width: 1190px) {
@@ -179,7 +180,6 @@ export default defineComponent({
 
     flex-direction: column;
 
-    margin-top: 3rem;
     gap: 2.5rem;
   }
   .company-stock-chart-and-time-series-statistics-wrapper {
