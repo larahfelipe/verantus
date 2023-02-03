@@ -1,8 +1,6 @@
 <template>
   <div :class="statisticsCardStyles">
-    <div>
-      <h6>{{ title }}</h6>
-    </div>
+    <span>{{ title }}</span>
 
     <div class="statistics-card-content-wrapper">
       <slot />
@@ -38,19 +36,17 @@ export default defineComponent({
 
 <style scoped>
 .statistics-card-wrapper {
-  width: 15rem;
-  height: 7.25rem;
+  width: 12.5rem;
 
-  min-width: 10rem;
-  min-height: 7rem;
+  min-width: 12rem;
 
   display: flex;
   flex-direction: column;
 
-  padding: 1rem;
+  padding: 1.2rem;
 
   border: 1px solid #ddd;
-  border-radius: 8px;
+  border-radius: 10px;
 
   cursor: default;
 
@@ -58,10 +54,9 @@ export default defineComponent({
 
   transition: all 0.2s ease;
 }
-
 .statistics-card-wrapper:hover,
 .statistics-card-wrapper-dark:hover {
-  transform: translateY(-0.25rem);
+  border-color: #01c261;
 }
 
 .statistics-card-wrapper:hover {
@@ -80,23 +75,21 @@ export default defineComponent({
   background-color: #202229;
 }
 
-.statistics-card-wrapper h6 {
-  margin-left: 0.75rem;
-
+.statistics-card-wrapper span {
+  font-size: 16px;
   font-weight: 600;
 }
 
 .statistics-card-content-wrapper {
   margin-top: 0.5rem;
-  margin-left: 1.6rem;
+  margin-left: 1.2rem;
 
-  font-size: 28px;
+  font-size: 24px;
 }
 
 @media (max-width: 1550px) {
   .statistics-card-wrapper {
     width: 11.5rem;
-    height: 7rem;
   }
   .statistics-card-wrapper h6 {
     margin-left: unset;

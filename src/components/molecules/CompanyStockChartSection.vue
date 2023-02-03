@@ -132,9 +132,9 @@ export default defineComponent({
 
 <style scoped>
 .company-stock-chart-wrapper {
-  height: 92.5%;
+  height: 100%;
 
-  margin-top: -4.5rem;
+  margin-top: -5rem;
 
   padding-right: 2rem;
 }

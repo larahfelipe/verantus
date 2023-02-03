@@ -81,13 +81,13 @@ export default defineComponent({
 
 <style scoped>
 .company-stock-statistics-section-wrapper {
-  height: 20%;
+  height: 10%;
 
   display: flex;
   justify-content: space-evenly;
   align-items: center;
 
-  padding-top: 1.5rem;
+  margin-bottom: 0.25rem;
 }
 
 .recommendation-text-wrapper {
@@ -126,7 +126,7 @@ export default defineComponent({
 @media (max-width: 1550px) {
   .company-stock-statistics-section-wrapper {
     width: 100%;
-    height: 40%;
+    height: 25%;
 
     justify-content: space-between;
 

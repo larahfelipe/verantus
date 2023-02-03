@@ -19,18 +19,17 @@ export default defineComponent({
 @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&display=swap');
 
 * {
+  -webkit-font-smoothing: antialiased;
   -webkit-appearance: none;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-html {
-  font-size: 88.5%;
-}
-
 html,
 body {
+  font-size: 88.5%;
+  font-weight: 500;
   font-family: 'Inter Tight', sans-serif !important;
 }
 
