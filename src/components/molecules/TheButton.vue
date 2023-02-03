@@ -36,10 +36,10 @@ export default defineComponent({
 
 <style scoped>
 .button {
-  padding: 0.8rem 0.9rem;
+  padding: 0.75rem 1rem;
 
   border: 1px solid #ddd;
-  border-radius: 5px;
+  border-radius: 10px;
 
   background-color: #ebedf3;
 

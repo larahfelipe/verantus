@@ -65,11 +65,13 @@ export default defineComponent({
 .select-input {
   width: 100%;
 
-  padding: 0.8rem 1rem;
+  padding: 0.75rem 1rem;
 
   border-radius: 0 5px 5px 0;
 
   font-size: 16px;
+
+  border: 1px solid #ededf3;
 
   background-color: #ebedf3;
 
@@ -78,6 +80,9 @@ export default defineComponent({
 
 .select-input__dark {
   color: #ddd;
+
+  border: 1px solid #202229;
+
   background-color: #202229;
 }
 
