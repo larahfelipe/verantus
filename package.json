@@ -1,9 +1,9 @@
 {
   "name": "verantus",
   "version": "0.0.0",
-  "author": "larafe1",
+  "author": "larahfelipe",
   "license": "MIT",
-  "repository": "https://github.com/larafe1/verantus.git",
+  "repository": "https://github.com/larahfelipe/verantus.git",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
