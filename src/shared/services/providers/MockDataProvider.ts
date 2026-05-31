@@ -42,7 +42,12 @@ export class MockDataProvider implements IFinancialDataProvider {
   async fetchAssetData(
     symbol: string,
     exchange: string
-  ): Promise<Omit<NormalizedAsset, 'history' | 'peers'>> {
+  ): Promise<
+    Omit<
+      NormalizedAsset,
+      'history' | 'peers' | 'financialsHistory' | 'evolutionStats' | 'thesis' | 'research'
+    >
+  > {
     const cleanSym = symbol.toUpperCase();
     const isSa = exchange === '.SA' || cleanSym.endsWith('4') || cleanSym.endsWith('3');
 

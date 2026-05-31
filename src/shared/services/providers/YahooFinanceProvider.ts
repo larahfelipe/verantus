@@ -35,7 +35,12 @@ export class YahooFinanceProvider implements IFinancialDataProvider {
   async fetchAssetData(
     symbol: string,
     exchange: string
-  ): Promise<Omit<NormalizedAsset, 'history' | 'peers'>> {
+  ): Promise<
+    Omit<
+      NormalizedAsset,
+      'history' | 'peers' | 'financialsHistory' | 'evolutionStats' | 'thesis' | 'research'
+    >
+  > {
     const fmtStockSymbol = symbol + exchange;
     const modules = config.yahooFinanceApiModules;
     const endpointUrl = `/v11/finance/quoteSummary/${fmtStockSymbol}?modules=${modules}`;

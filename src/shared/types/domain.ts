@@ -98,7 +98,7 @@ export interface ScoreItemDetail {
 export interface ScoreComponent {
   score: number; // 0 - 100
   methodology: string;
-  breakdown: ScoreItemDetail[];
+  breakdown?: ScoreItemDetail[];
   details: string[];
 }
 

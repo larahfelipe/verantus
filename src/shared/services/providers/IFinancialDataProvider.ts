@@ -5,6 +5,11 @@ export interface IFinancialDataProvider {
   fetchAssetData(
     symbol: string,
     exchange: string
-  ): Promise<Omit<NormalizedAsset, 'history' | 'peers'>>;
+  ): Promise<
+    Omit<
+      NormalizedAsset,
+      'history' | 'peers' | 'financialsHistory' | 'evolutionStats' | 'thesis' | 'research'
+    >
+  >;
   fetchAssetHistory(symbol: string, exchange: string, range: string): Promise<HistoricalPoint[]>;
 }
