@@ -1,9 +1,13 @@
 {
   "name": "verantus",
-  "version": "0.0.0",
-  "author": "larafe1",
+  "version": "1.0.0",
+  "type": "module",
+  "author": {
+    "name": "larahfelipe",
+    "url": "https://github.com/larahfelipe"
+  },
   "license": "MIT",
-  "repository": "https://github.com/larafe1/verantus.git",
+  "repository": "https://github.com/larahfelipe/verantus.git",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
@@ -15,33 +19,36 @@
     "typecheck": "tsc --project tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@quasar/extras": "^1.15.4",
-    "add": "^2.0.6",
-    "apexcharts": "^3.35.5",
-    "axios": "^0.27.2",
-    "quasar": "^2.9.1",
-    "vue": "^3.2.40",
-    "vue3-apexcharts": "^1.4.1",
-    "vuex": "^4.0.2",
-    "vuex-persist": "^3.1.3",
-    "yarn": "^1.22.19"
+    "@tanstack/vue-query": "^5.100.14",
+    "axios": "^1.7.2",
+    "chart.js": "^4.4.3",
+    "pinia": "^3.0.4",
+    "vue": "^3.4.27",
+    "vue-router": "^5.1.0",
+    "vuex": "^4.1.0",
+    "vuex-persist": "^3.1.3"
   },
   "devDependencies": {
-    "@quasar/vite-plugin": "^1.2.3",
-    "@types/node": "^18.8.1",
-    "@typescript-eslint/eslint-plugin": "^5.39.0",
-    "@typescript-eslint/parser": "^5.39.0",
-    "@vitejs/plugin-vue": "^3.1.2",
-    "eslint": "^8.24.0",
-    "eslint-config-prettier": "^8.5.0",
+    "@playwright/test": "^1.60.0",
+    "@types/node": "^20.12.12",
+    "@typescript-eslint/eslint-plugin": "^7.10.0",
+    "@typescript-eslint/parser": "^7.10.0",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "@vue/test-utils": "^2.4.10",
+    "autoprefixer": "^10.4.19",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import-helpers": "^1.2.1",
-    "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-vue": "^9.6.0",
-    "prettier": "^2.7.1",
-    "sass": "1.32.12",
-    "typescript": "^4.8.4",
-    "vite": "^3.1.4",
-    "vue-eslint-parser": "^9.1.0",
-    "vue-tsc": "^0.40.13"
+    "eslint-plugin-prettier": "^5.1.3",
+    "eslint-plugin-vue": "^9.26.0",
+    "postcss": "^8.4.38",
+    "prettier": "^3.2.5",
+    "sass": "^1.77.2",
+    "tailwindcss": "^3.4.3",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.11",
+    "vitest": "1.6.0",
+    "vue-eslint-parser": "^9.4.2",
+    "vue-tsc": "^2.0.19"
   }
 }

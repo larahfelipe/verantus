@@ -1,6 +1,5 @@
 import type { PropType } from 'vue';
 
-import type { QSkeletonProps } from 'quasar';
 import type { ActionContext } from 'vuex';
 
 export type StockPayload = {
@@ -22,7 +21,7 @@ export type Stock = {
 type ComponentProps<T = unknown> = {
   type: PropType<T>;
   required: boolean;
-  default?: T;
+  default?: T | (() => T);
 };
 
 export type InputFieldProps = {
@@ -67,13 +66,6 @@ export type StatisticsCardProps = {
   title: ComponentProps<string>;
 };
 
-export type SkeletonLoaderProps = {
-  type: ComponentProps<QSkeletonProps['type']>;
-  width: ComponentProps<string | string[]>;
-  height: ComponentProps<string | string[]>;
-  repeat: ComponentProps<boolean>;
-};
-
 type StockStatisticsProps = {
   raw: number;
   fmt: string;
@@ -87,6 +79,10 @@ export type StockData = {
         assetProfile: {
           website: string;
           longBusinessSummary: string;
+          sector?: string;
+          industry?: string;
+          country?: string;
+          fullTimeEmployees?: number;
         };
         quoteType: {
           exchange: string;
@@ -97,7 +93,9 @@ export type StockData = {
         };
         defaultKeyStatistics: {
           enterpriseValue: StockStatisticsProps;
+          marketCap?: StockStatisticsProps;
           forwardPE: StockStatisticsProps;
+          trailingPE?: StockStatisticsProps;
           pegRatio: StockStatisticsProps;
           priceToBook: StockStatisticsProps;
           enterpriseToRevenue: StockStatisticsProps;
@@ -116,11 +114,16 @@ export type StockData = {
           lastSplitDate: StockStatisticsProps;
           lastSplitFactor: string | undefined;
           '52WeekChange': StockStatisticsProps;
+          beta?: StockStatisticsProps;
+          dividendYield?: StockStatisticsProps;
+          payoutRatio?: StockStatisticsProps;
+          exDividendDate?: StockStatisticsProps;
         };
         financialData: {
           currentPrice: StockStatisticsProps;
           profitMargins: StockStatisticsProps;
           operatingMargins: StockStatisticsProps;
+          grossMargins?: StockStatisticsProps;
           totalRevenue: StockStatisticsProps;
           revenuePerShare: StockStatisticsProps;
           revenueGrowth: StockStatisticsProps;
@@ -133,13 +136,14 @@ export type StockData = {
           totalDebt: StockStatisticsProps;
           debtToEquity: StockStatisticsProps;
           currentRatio: StockStatisticsProps;
+          quickRatio?: StockStatisticsProps;
           operatingCashflow: StockStatisticsProps;
           freeCashflow: StockStatisticsProps;
-          currentPrice: StockStatisticsProps;
           targetMeanPrice: StockStatisticsProps;
           targetLowPrice: StockStatisticsProps;
           financialCurrency: string;
           recommendationKey: string;
+          volume?: StockStatisticsProps;
         };
       }
     ];
@@ -150,24 +154,14 @@ export type StockData = {
   };
 };
 
-type Range =
-  | '1d'
-  | '5d'
-  | '1mo'
-  | '3mo'
-  | '6mo'
-  | '1y'
-  | '2y'
-  | '5y'
-  | '10y'
-  | 'ytd'
-  | 'max';
+type Range = '1d' | '5d' | '1mo' | '3mo' | '6mo' | '1y' | '2y' | '5y' | '10y' | 'ytd' | 'max';
 
 export type StockChart = {
   chart: {
     result: [
       {
         meta: {
+          currency?: string;
           range: Range;
           previousClose: number;
           validRanges: Range[];
@@ -196,7 +190,7 @@ export type StockChart = {
 export type StockState = {
   isLoading: boolean;
   isFetching: boolean;
-  error: any;
+  error: string | null;
   stockData: StockDataDestructured | null;
   stockChart: StockChartDestructured | null;
 };

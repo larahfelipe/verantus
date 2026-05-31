@@ -24,10 +24,24 @@
   "plugins": ["@typescript-eslint", "eslint-plugin-import-helpers"],
   "rules": {
     "no-duplicate-imports": "error",
+    "no-console": ["warn", { "allow": ["warn", "error", "info"] }],
     "vue/no-child-content": "off",
+    "vue/multi-word-component-names": "off",
+    "vue/component-name-in-template-casing": ["error", "PascalCase"],
+    "vue/html-self-closing": [
+      "error",
+      {
+        "html": {
+          "void": "always",
+          "normal": "always",
+          "component": "always"
+        }
+      }
+    ],
     "@typescript-eslint/explicit-module-boundary-types": "off",
-    "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/no-non-null-assertion": "warn",
+    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
     "import-helpers/order-imports": [
       "warn",
       {
