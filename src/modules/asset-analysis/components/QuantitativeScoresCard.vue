@@ -1,232 +1,310 @@
 <template>
-  <div
+  <section
     v-if="asset"
-    class="rounded-xl bg-white dark:bg-zinc-900 border border-neutral-100 dark:border-neutral-800 shadow-md p-6 transition-all duration-200"
+    aria-labelledby="fundamental-rating-heading"
+    class="rating-card rounded-xl bg-white dark:bg-zinc-900 border border-neutral-100 dark:border-neutral-800 shadow-md p-6 transition-all duration-200"
   >
     <div
-      class="flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800 pb-4"
+      class="rating-card__header flex justify-between gap-6 pb-6 border-b border-neutral-200/60 dark:border-neutral-800"
     >
-      <div>
-        <h2 class="text-sm font-bold uppercase tracking-wider text-neutral-400">
-          Quantitative Rating
-        </h2>
-        <p class="text-xs text-neutral-500 dark:text-neutral-400 mt-1">
-          Multi-factor rating breakdown and audit metrics
-        </p>
-      </div>
-      <div class="flex items-center gap-3">
-        <div class="text-right">
-          <div class="text-2xl font-extrabold tracking-tight text-neutral-900 dark:text-white">
-            {{ asset.scores.consolidated
-            }}<span class="text-xs text-neutral-400 font-semibold">/100</span>
-          </div>
-          <span class="text-[10px] font-bold uppercase tracking-wider text-neutral-400"
-            >Consolidated</span
-          >
-        </div>
+      <div class="flex items-start gap-5">
         <div
-          class="h-12 w-12 rounded-xl flex items-center justify-center text-lg font-black shadow-inner"
-          :class="badgeColorClass"
+          class="h-20 w-20 shrink-0 rounded-2xl flex flex-col items-center justify-center border font-black text-3xl shadow-sm tracking-tighter"
+          :class="gradeBadgeClass"
         >
+          <span class="text-[9px] uppercase tracking-widest font-bold opacity-60"> Rating </span>
           {{ gradeLabel }}
+        </div>
+
+        <div class="space-y-1.5">
+          <h2
+            id="fundamental-rating-heading"
+            class="text-xs font-bold uppercase tracking-wider text-neutral-400 dark:text-neutral-500"
+          >
+            Fundamental Rating
+          </h2>
+
+          <div class="flex items-baseline gap-2">
+            <span class="text-4xl font-extrabold text-neutral-900 dark:text-white tracking-tight">
+              {{ consolidatedScore }}
+            </span>
+
+            <span class="text-sm text-neutral-400 dark:text-neutral-500 font-semibold">/ 100</span>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2 text-xs font-bold">
+            <span class="text-neutral-900 dark:text-white">{{ assessment }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap gap-2.5 items-center">
+        <div
+          class="px-4 py-2.5 rounded-xl bg-neutral-50 dark:bg-zinc-800/30 border border-neutral-100 dark:border-neutral-800 flex flex-col gap-0.5"
+        >
+          <span class="text-[9px] uppercase font-bold text-neutral-400 tracking-wider"
+            >Grade Scale</span
+          >
+
+          <span class="text-xs font-bold text-neutral-900 dark:text-white">
+            A ≥ 80 · B ≥ 65 · C ≥ 50 · D &lt; 50
+          </span>
+
+          <span class="text-[9px] font-bold text-neutral-400"
+            >Weighted across 5 fundamental factors</span
+          >
         </div>
       </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-      <div class="space-y-4">
-        <h3
-          class="text-xs font-bold text-neutral-700 dark:text-neutral-300 uppercase tracking-wide"
-        >
-          Dimension Performance
-        </h3>
+    <div class="py-5 border-b border-neutral-200/60 dark:border-neutral-800">
+      <h3
+        class="text-xs font-bold uppercase tracking-wider text-neutral-400 dark:text-neutral-500 mb-2"
+      >
+        Analyst Executive Summary
+      </h3>
 
-        <div
-          v-for="(val, key) in dimensions"
-          :key="key"
-          class="space-y-1.5 p-3 rounded-xl hover:bg-neutral-50 dark:hover:bg-zinc-800/30 transition-all"
-        >
-          <div class="flex items-center justify-between text-xs">
-            <span class="font-bold capitalize text-neutral-700 dark:text-neutral-300">{{
-              key.replace(/([A-Z])/g, ' $1')
+      <p class="text-sm font-semibold text-neutral-800 dark:text-neutral-200 leading-relaxed">
+        "{{ executiveSummary }}"
+      </p>
+    </div>
+
+    <div class="py-5 border-b border-neutral-200/60 dark:border-neutral-800">
+      <div class="flex flex-col justify-between">
+        <div>
+          <h3
+            class="text-xs font-bold uppercase tracking-wider text-neutral-400 dark:text-neutral-500"
+          >
+            Fundamental Health Index
+          </h3>
+
+          <p class="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
+            Combined core strength metric (excludes valuation price levels)
+          </p>
+        </div>
+
+        <div class="flex items-center gap-3 mt-3">
+          <div class="shrink-0 min-w-[55px]">
+            <span class="text-2xl font-black text-neutral-900 dark:text-white">{{
+              fundamentalHealthScore
             }}</span>
-            <div class="flex items-center gap-2">
-              <span class="font-extrabold text-neutral-900 dark:text-white"
-                >{{ val?.score || 0 }}%</span
-              >
-              <button
-                type="button"
-                class="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 hover:underline"
-                :aria-expanded="activeAuditKey === key ? 'true' : 'false'"
-                aria-controls="methodology-panel"
-                @click="toggleActiveAudit(key)"
-              >
-                {{ activeAuditKey === key ? 'Hide Audit' : 'Audit Logs' }}
-              </button>
-            </div>
+
+            <span class="text-xs text-neutral-400 font-semibold">/100</span>
           </div>
+
           <div
-            class="h-2 rounded-full bg-neutral-100 dark:bg-neutral-800 overflow-hidden"
+            class="h-2 w-full rounded-full bg-neutral-100 dark:bg-neutral-800 overflow-hidden"
             role="progressbar"
-            :aria-valuenow="val?.score || 0"
-            aria-valmin="0"
-            aria-valmax="100"
-            :aria-label="key.replace(/([A-Z])/g, ' $1') + ' performance score'"
+            :aria-valuenow="fundamentalHealthScore"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-label="Fundamental health index"
           >
             <div
-              class="h-full rounded-full transition-all duration-500"
-              :class="barColorClass(val?.score || 0)"
-              :style="{ width: (val?.score || 0) + '%' }"
+              class="h-full rounded-full transition-all duration-300"
+              :class="healthBarColor"
+              :style="{ width: fundamentalHealthScore + '%' }"
             />
           </div>
         </div>
       </div>
+    </div>
 
-      <div
-        id="methodology-panel"
-        class="rounded-lg bg-neutral-50 dark:bg-zinc-800/40 p-5 border border-neutral-100 dark:border-neutral-800 flex flex-col justify-between"
-      >
-        <div>
-          <div
-            class="flex items-center justify-between pb-3 border-b border-neutral-200/50 dark:border-neutral-700/50"
-          >
-            <h4 class="text-xs font-bold uppercase tracking-wider text-neutral-400">
-              Methodology & Logs
-            </h4>
+    <FactorGradeList
+      :dimensions="dimensions"
+      :active-key="activeAuditKey"
+      @select="activeAuditKey = $event"
+    />
+
+    <div class="rating-card__split grid grid-cols-1 gap-6 mt-6">
+      <div class="space-y-3">
+        <h3
+          class="text-xs font-bold uppercase tracking-wider text-neutral-400 dark:text-neutral-500"
+        >
+          Rating Score Drivers
+        </h3>
+
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 gap-4 border border-neutral-100 dark:border-neutral-800 rounded-xl p-4 bg-neutral-50/50 dark:bg-zinc-800/10"
+        >
+          <div>
             <span
-              class="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase"
-              :class="
-                activeAuditKey
-                  ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
-                  : 'bg-neutral-200 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-400'
-              "
+              class="text-[9px] font-black uppercase text-emerald-600 dark:text-emerald-400 tracking-wider block mb-2"
+              >Positive Catalysts</span
             >
-              {{ activeAuditKey ? activeAuditKey.replace(/([A-Z])/g, ' $1') : 'Select Dimension' }}
-            </span>
+
+            <ul class="space-y-1.5">
+              <li
+                v-for="driver in scoreDrivers.positive"
+                :key="driver"
+                class="flex items-start gap-2 text-xs font-semibold text-neutral-800 dark:text-neutral-200"
+              >
+                <span class="text-emerald-500 select-none font-bold">✓</span>
+
+                <span>{{ driver }}</span>
+              </li>
+
+              <li v-if="scoreDrivers.positive.length === 0" class="text-xs text-neutral-400 italic">
+                No key positive drivers found.
+              </li>
+            </ul>
           </div>
 
-          <div v-if="activeAudit" class="mt-4 space-y-4">
-            <div>
-              <span class="text-[10px] font-bold uppercase tracking-wider text-neutral-400"
-                >Evaluation Method</span
-              >
-              <p class="text-xs font-medium text-neutral-700 dark:text-neutral-300 mt-1 italic">
-                {{ activeAudit.methodology }}
-              </p>
-            </div>
-
-            <div>
-              <span class="text-[10px] font-bold uppercase tracking-wider text-neutral-400"
-                >System Logs</span
-              >
-              <div class="mt-2 space-y-2 max-h-[160px] overflow-y-auto pr-1">
-                <div
-                  v-for="(log, idx) in activeAudit.details"
-                  :key="idx"
-                  class="flex items-start gap-2 text-xs leading-relaxed text-neutral-600 dark:text-neutral-400"
-                >
-                  <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-500" />
-                  <span>{{ log }}</span>
-                </div>
-                <div
-                  v-if="activeAudit.details.length === 0"
-                  class="text-xs text-neutral-500 italic"
-                >
-                  No logs generated for this dimension.
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div v-else class="h-48 flex flex-col items-center justify-center text-center">
-            <svg
-              class="w-8 h-8 text-neutral-300 dark:text-neutral-700 mb-2"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
+          <div>
+            <span
+              class="text-[9px] font-black uppercase text-amber-600 dark:text-amber-500 tracking-wider block mb-2"
+              >Risk Factors &amp; Headwinds</span
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-              />
-            </svg>
-            <p class="text-xs text-neutral-400 font-medium">
-              Click "Audit Logs" to view quantitative scoring formulas and metrics calculation
-              audits.
-            </p>
+
+            <ul class="space-y-1.5">
+              <li
+                v-for="driver in scoreDrivers.negative"
+                :key="driver"
+                class="flex items-start gap-2 text-xs font-semibold text-neutral-800 dark:text-neutral-200"
+              >
+                <span class="text-amber-500 select-none font-bold">⚠</span>
+
+                <span>{{ driver }}</span>
+              </li>
+
+              <li v-if="scoreDrivers.negative.length === 0" class="text-xs text-neutral-400 italic">
+                No risk headwinds detected.
+              </li>
+            </ul>
           </div>
         </div>
       </div>
+
+      <div class="space-y-3">
+        <h3
+          class="text-xs font-bold uppercase tracking-wider text-neutral-400 dark:text-neutral-500"
+        >
+          Company vs Benchmark
+        </h3>
+
+        <div class="border border-neutral-100 dark:border-neutral-800 rounded-xl overflow-hidden">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr
+                class="bg-neutral-50 dark:bg-zinc-800/30 text-[9px] font-bold text-neutral-400 uppercase tracking-wider"
+              >
+                <th class="py-2.5 px-4">Key Metric</th>
+
+                <th class="py-2.5 px-4 text-right">Company</th>
+
+                <th class="py-2.5 px-4 text-right">Benchmark</th>
+              </tr>
+            </thead>
+
+            <tbody class="divide-y divide-neutral-100 dark:divide-neutral-800/80">
+              <tr
+                v-for="item in benchmarkComparisons"
+                :key="item.name"
+                class="text-xs font-semibold text-neutral-800 dark:text-neutral-200 hover:bg-neutral-50/30 dark:hover:bg-zinc-800/5"
+              >
+                <td class="py-2 px-4">{{ item.name }}</td>
+
+                <td class="py-2 px-4 text-right text-neutral-900 dark:text-white">
+                  {{ item.value }}
+                </td>
+
+                <td class="py-2 px-4 text-right text-neutral-400">
+                  {{ item.benchmark }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
-  </div>
+
+    <FactorAuditPanel
+      :audit="activeAudit"
+      :audit-trail="auditTrailItems"
+      :dimension-name="selectedDimensionName"
+    />
+  </section>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 
-import type { NormalizedAsset, ScoreComponent } from '../../../shared/types/domain';
+import type { NormalizedAsset, ScoreComponent } from '@/shared/types/domain';
+
+import { buildAuditTrail, useFundamentalRating } from '../composables/useFundamentalRating';
+import FactorAuditPanel from './FactorAuditPanel.vue';
+import FactorGradeList from './FactorGradeList.vue';
 
 const props = defineProps<{
   asset: NormalizedAsset | null;
 }>();
 
-const activeAuditKey = ref<string>('businessQuality');
+const {
+  consolidatedScore,
+  gradeLabel,
+  gradeBadgeClass,
+  assessment,
+  executiveSummary,
+  fundamentalHealthScore,
+  healthBarColor,
+  dimensions,
+  scoreDrivers,
+  benchmarkComparisons
+} = useFundamentalRating(() => props.asset);
 
-const dimensions = computed(() => {
-  if (!props.asset) return {};
-  return {
-    businessQuality: props.asset.scores.businessQuality,
-    growth: props.asset.scores.growth,
-    financialHealth: props.asset.scores.financialHealth,
-    valuation: props.asset.scores.valuation,
-    efficiency: props.asset.scores.efficiency
-  };
-});
+type FactorScoreKey = Exclude<keyof NormalizedAsset['scores'], 'consolidated'>;
+const DEFAULT_FACTOR: FactorScoreKey = 'businessQuality';
+
+const activeAuditKey = ref<string>(DEFAULT_FACTOR);
 
 watch(
   () => props.asset,
   () => {
-    activeAuditKey.value = 'businessQuality';
-  },
-  { deep: true }
+    activeAuditKey.value = DEFAULT_FACTOR;
+  }
 );
 
 const activeAudit = computed<ScoreComponent | null>(() => {
-  if (!props.asset || !activeAuditKey.value) return null;
-  const key = activeAuditKey.value as Exclude<keyof typeof props.asset.scores, 'consolidated'>;
-  return props.asset.scores[key] || null;
+  const scores = props.asset?.scores;
+  if (!scores) return null;
+  return scores[activeAuditKey.value as FactorScoreKey] ?? null;
 });
 
-const toggleActiveAudit = (key: string) => {
-  if (activeAuditKey.value === key) {
-    activeAuditKey.value = '';
-  } else {
-    activeAuditKey.value = key;
-  }
-};
+const auditTrailItems = computed(() => buildAuditTrail(activeAudit.value));
 
-const gradeLabel = computed(() => {
-  const sc = props.asset?.scores.consolidated || 50;
-  if (sc >= 75) return 'A';
-  if (sc >= 60) return 'B';
-  if (sc >= 45) return 'C';
-  return 'D';
+const selectedDimensionName = computed(() => {
+  const spaced = activeAuditKey.value.replace(/([A-Z])/g, ' $1');
+  return spaced.charAt(0).toUpperCase() + spaced.slice(1);
 });
-
-const badgeColorClass = computed(() => {
-  const sc = props.asset?.scores.consolidated || 50;
-  if (sc >= 75) return 'bg-teal-500/10 text-teal-600 dark:text-teal-400';
-  if (sc >= 60) return 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400';
-  if (sc >= 45) return 'bg-amber-500/10 text-amber-600 dark:text-amber-400';
-  return 'bg-rose-500/10 text-rose-600 dark:text-rose-400';
-});
-
-const barColorClass = (score: number): string => {
-  if (score >= 70) return 'bg-teal-500 dark:bg-teal-400';
-  if (score >= 45) return 'bg-emerald-500 dark:bg-emerald-400';
-  return 'bg-rose-500 dark:bg-rose-400';
-};
 </script>
+
+<style scoped>
+/*
+ * On xl screens this card sits in a column capped at 600px, so its internal
+ * layout must respond to its own width — not the viewport. Container queries
+ * keep tight regions stacked until the card itself is wide enough, instead of
+ * laying them out horizontally exactly when the card is at its narrowest.
+ */
+.rating-card {
+  container-type: inline-size;
+}
+
+.rating-card__header {
+  flex-direction: column;
+}
+
+.rating-card__split {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@container (min-width: 40rem) {
+  .rating-card__header {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .rating-card__split {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+</style>

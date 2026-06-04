@@ -21,13 +21,38 @@
     "ecmaVersion": 11,
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint", "eslint-plugin-import-helpers"],
+  "plugins": [
+    "@typescript-eslint",
+    "eslint-plugin-import-helpers"
+  ],
   "rules": {
     "no-duplicate-imports": "error",
-    "no-console": ["warn", { "allow": ["warn", "error", "info"] }],
+    "no-console": [
+      "warn",
+      {
+        "allow": [
+          "warn",
+          "error",
+          "info"
+        ]
+      }
+    ],
     "vue/no-child-content": "off",
     "vue/multi-word-component-names": "off",
-    "vue/component-name-in-template-casing": ["error", "PascalCase"],
+    "vue/padding-line-between-tags": [
+      "error",
+      [
+        {
+          "blankLine": "always",
+          "prev": "*",
+          "next": "*"
+        }
+      ]
+    ],
+    "vue/component-name-in-template-casing": [
+      "error",
+      "PascalCase"
+    ],
     "vue/html-self-closing": [
       "error",
       {
@@ -41,18 +66,36 @@
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/no-explicit-any": "warn",
     "@typescript-eslint/no-non-null-assertion": "warn",
-    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_"
+      }
+    ],
     "import-helpers/order-imports": [
       "warn",
       {
         "newlinesBetween": "always",
         "groups": [
-          ["/^vue$/"],
-          ["module"],
-          ["/^@//"],
-          ["parent", "sibling", "index"]
+          [
+            "/^vue$/"
+          ],
+          [
+            "module"
+          ],
+          [
+            "/^@//"
+          ],
+          [
+            "parent",
+            "sibling",
+            "index"
+          ]
         ],
-        "alphabetize": { "order": "asc", "ignoreCase": true }
+        "alphabetize": {
+          "order": "asc",
+          "ignoreCase": true
+        }
       }
     ]
   }

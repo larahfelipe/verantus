@@ -1,26 +1,36 @@
 <template>
-  <div
+  <section
     v-if="asset"
+    aria-labelledby="price-history-heading"
     class="rounded-xl bg-white dark:bg-zinc-900 border border-neutral-100 dark:border-neutral-800 shadow-md p-6 transition-all duration-200"
   >
     <div
       class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between border-b border-neutral-100 dark:border-neutral-800 pb-4"
     >
       <div>
-        <h2 class="text-sm font-bold uppercase tracking-wider text-neutral-400">Price History</h2>
+        <h2
+          id="price-history-heading"
+          class="text-sm font-bold uppercase tracking-wider text-neutral-400"
+        >
+          Price History
+        </h2>
+
         <div class="mt-2 flex flex-wrap items-center gap-x-6 gap-y-2">
           <div>
             <div class="text-[9px] font-bold uppercase tracking-wider text-neutral-400">
               Last Close
             </div>
+
             <div class="text-base font-extrabold text-neutral-900 dark:text-white mt-0.5">
               {{ displayCurrency }} {{ latestClose }}
             </div>
           </div>
+
           <div>
             <div class="text-[9px] font-bold uppercase tracking-wider text-neutral-400">
               History Range
             </div>
+
             <div class="text-base font-extrabold text-neutral-900 dark:text-white mt-0.5">
               {{ activeRangeLabel }}
             </div>
@@ -28,9 +38,11 @@
         </div>
       </div>
 
-      <div class="flex flex-wrap items-center gap-1 bg-neutral-100 dark:bg-zinc-800 rounded-xl p-1">
+      <div
+        class="w-fit flex flex-wrap items-center gap-1 bg-neutral-100 dark:bg-zinc-800 rounded-xl p-1"
+      >
         <button
-          v-for="tf in timeframes"
+          v-for="tf in config.CHART.TIMEFRAMES"
           :key="tf.value"
           type="button"
           class="rounded-lg px-3 py-1.5 text-[10px] font-bold transition-all duration-200"
@@ -48,32 +60,53 @@
       </div>
     </div>
 
-    <div class="relative mt-5 w-full h-[320px] md:h-[380px]">
+    <figure class="relative mt-5 mb-0 w-full h-[320px] md:h-[380px]">
       <div
         v-if="stockStore.isLoading"
         class="absolute inset-0 bg-white/70 dark:bg-zinc-900/70 backdrop-blur-[1px] flex flex-col items-center justify-center rounded-lg z-10 transition-all duration-300"
+        role="status"
+        aria-label="Updating price history"
       >
         <div
           class="h-8 w-8 border-4 border-emerald-600/30 border-t-emerald-600 rounded-full animate-spin"
+          aria-hidden="true"
         />
+
         <span class="text-[10px] font-bold text-neutral-500 mt-2">Updating history...</span>
       </div>
-      <canvas ref="canvasRef" role="img" aria-label="Stock price history chart">
-        Interactive stock price chart showing historic daily closing values over time.
+
+      <div
+        v-if="!stockStore.isLoading && !hasHistory"
+        class="absolute inset-0 flex flex-col items-center justify-center rounded-lg text-center"
+      >
+        <span class="text-xs font-bold text-neutral-500">Price history unavailable</span>
+
+        <span class="text-[10px] text-neutral-400 mt-1"
+          >No close series was returned by the data source for this range.</span
+        >
+      </div>
+
+      <canvas v-show="hasHistory" ref="canvasRef" role="img" :aria-label="chartAriaLabel">
+        {{ chartAriaLabel }}
       </canvas>
-    </div>
-  </div>
+
+      <figcaption class="sr-only">
+        Line chart of {{ displayCurrency }} closing prices over the {{ activeRangeLabel }} range.
+      </figcaption>
+    </figure>
+  </section>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
 import { Chart, registerables } from 'chart.js';
 
-import type { NormalizedAsset } from '../../../shared/types/domain';
-import { parseCurrency } from '../../../shared/utils/parseCurrency';
-import { useStockStore } from '../../../stores/stockStore';
-import { useThemeStore } from '../../../stores/themeStore';
+import config from '@/config';
+import type { HistoricalPoint, NormalizedAsset } from '@/shared/types/domain';
+import { parseCurrency } from '@/shared/utils/parseCurrency';
+import { useStockStore } from '@/stores/stockStore';
+import { useThemeStore } from '@/stores/themeStore';
 
 Chart.register(...registerables);
 
@@ -87,30 +120,76 @@ const themeStore = useThemeStore();
 const canvasRef = ref<HTMLCanvasElement | null>(null);
 let chartInstance: Chart | null = null;
 
-const timeframes = [
-  { label: '1D', value: '1d' },
-  { label: '5D', value: '5d' },
-  { label: '1M', value: '1mo' },
-  { label: '6M', value: '6mo' },
-  { label: '1Y', value: '1y' },
-  { label: '5Y', value: '5y' }
-];
-
 const displayCurrency = computed(() => {
   return parseCurrency(props.asset?.profile.currency || 'USD');
 });
 
+type AxisGranularity = 'hour' | 'day' | 'week' | 'month' | 'year';
+
+function axisBucketId(date: Date, granularity: AxisGranularity): number {
+  const ms = date.getTime();
+  switch (granularity) {
+    case 'hour':
+      return Math.floor(ms / config.TIME.MS_PER_HOUR);
+    case 'day':
+      return Math.floor(ms / config.TIME.MS_PER_DAY);
+    case 'week':
+      return Math.floor(ms / config.TIME.MS_PER_WEEK);
+    case 'month':
+      return date.getFullYear() * 12 + date.getMonth();
+    case 'year':
+      return date.getFullYear();
+  }
+}
+
+function axisBucketLabel(date: Date, granularity: AxisGranularity): string {
+  switch (granularity) {
+    case 'hour':
+      return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    case 'day':
+    case 'week':
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    case 'month':
+      return date.toLocaleDateString('en-US', { month: 'short' });
+    case 'year':
+      return String(date.getFullYear());
+  }
+}
+
+function buildAxisLabels(history: HistoricalPoint[], range: string): string[] {
+  const granularity =
+    config.CHART.RANGE_AXIS_GRANULARITY[range] ?? config.CHART.DEFAULT_AXIS_GRANULARITY;
+  let previousBucket: number | null = null;
+  return history.map((point) => {
+    const date = new Date(point.timestamp * 1000);
+    const bucket = axisBucketId(date, granularity);
+    if (bucket === previousBucket) return '';
+    previousBucket = bucket;
+    return axisBucketLabel(date, granularity);
+  });
+}
+
+const hasHistory = computed(() => (props.asset?.history.length ?? 0) > 0);
+
 const latestClose = computed(() => {
-  if (!props.asset || props.asset.history.length === 0) return '—';
-  const hist = props.asset.history;
-  const lastVal = hist[hist.length - 1].close;
-  return lastVal !== null ? lastVal.toFixed(2) : '—';
+  const hist = props.asset?.history;
+  if (!hist || hist.length === 0) return '—';
+  for (let i = hist.length - 1; i >= 0; i -= 1) {
+    const close = hist[i].close;
+    if (close !== null) return close.toFixed(2);
+  }
+  return '—';
 });
 
 const activeRangeLabel = computed(() => {
-  const matched = timeframes.find((t) => t.value === stockStore.range);
+  const matched = config.CHART.TIMEFRAMES.find((t) => t.value === stockStore.range);
   return matched ? matched.label : stockStore.range;
 });
+
+const chartAriaLabel = computed(
+  () =>
+    `Price history line chart over the ${activeRangeLabel.value} range, last close ${displayCurrency.value} ${latestClose.value}.`
+);
 
 const changeRange = async (rangeVal: string) => {
   await stockStore.changeRange(rangeVal);
@@ -131,8 +210,10 @@ const renderChart = () => {
   if (!ctx) return;
 
   const history = props.asset.history;
-  const labels = history.map((h) => h.date);
-  const data = history.map((h) => h.close as number);
+  const labels = history.map((point) => point.date);
+  const axisLabels = buildAxisLabels(history, stockStore.range);
+  // Close can be null on illiquid/holiday buckets; Chart.js renders gaps natively.
+  const closePrices: (number | null)[] = history.map((point) => point.close);
 
   const gradient = ctx.createLinearGradient(0, 0, 0, 350);
   const isDark = themeStore.currentTheme === 'dark';
@@ -151,7 +232,8 @@ const renderChart = () => {
       datasets: [
         {
           label: 'Close Price',
-          data,
+          data: closePrices,
+          spanGaps: true,
           borderColor: '#10b981',
           borderWidth: 2.5,
           fill: true,
@@ -196,7 +278,8 @@ const renderChart = () => {
       scales: {
         x: {
           grid: {
-            display: false
+            display: false,
+            drawTicks: false
           },
           ticks: {
             color: labelColor,
@@ -205,7 +288,10 @@ const renderChart = () => {
               size: 10,
               weight: 'bold'
             },
-            maxTicksLimit: 6
+            autoSkip: false,
+            maxRotation: 0,
+            minRotation: 0,
+            callback: (_value, index) => axisLabels[index] ?? ''
           }
         },
         y: {

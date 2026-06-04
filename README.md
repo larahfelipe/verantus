@@ -1,6 +1,6 @@
 # verantus
 
-A premium, modern fundamental analysis dashboard and peer benchmarking platform designed to analyze financial assets and evaluate them through an auditable quantitative scoring model.
+A high-fidelity quantitative fundamental analysis and investment research platform for equities, designed to analyze financial assets, benchmark competitors, and evaluate businesses through an auditable multi-factor quantitative scoring model.
 
 ## Features
 
@@ -9,9 +9,8 @@ A premium, modern fundamental analysis dashboard and peer benchmarking platform 
 - **Interactive Data Charts:** Responsive price histories using Chart.js with canvas gradients, dynamic timeframe toggling, and non-blocking local loaders.
 - **Detailed Statements:** Summarized Balance Sheets, Income Statements, and Cash Flow logs in dynamic tabular views.
 - **Peer Benchmarking Matrices:** Side-by-side comparison tables against sector competitors with calculated ROE/PE spreads.
-- **Premium Styling & UI Polish:** Adaptive emerald green color scheme, glassmorphism sticky navigation bar, theme-integrated scrollbars, and pulsing Skeleton loaders.
 
-## Tech Stack
+## Tech stack
 
 - **Framework:** Vue 3 (Composition API)
 - **State Management:** Pinia
@@ -22,42 +21,29 @@ A premium, modern fundamental analysis dashboard and peer benchmarking platform 
 - **Languages & Linter:** TypeScript, ESLint, Prettier
 - **Testing:** Vitest (unit), Playwright (E2E)
 
-## Getting Started
+## Getting started
 
 ### 1. Installation
 Clone the repository and install dependencies:
 ```bash
-pnpm install
-# or npm install / yarn install
+yarn install
 ```
 
-### 2. Environment Setup
-Configure the environment variables by copying `.env.example`:
+### 2. Environment setup
+Configure the environment variables by copying `.env.example` and adding your Yahoo Finance API key:
 ```bash
 cp .env.example .env
 ```
+Open the `.env` file and insert your API key in the `VITE_YAHOO_FINANCE_API_KEY` variable.
 
-### 3. Development Server
+### 3. Dev server
 Run the local hot-reloaded dev server:
 ```bash
-npm run dev
+yarn dev
 ```
 
-### 4. Build Compilation
+### 4. Build
 Compile and optimize for production:
 ```bash
-npm run build
-```
-
-### 5. Running Tests
-Execute the unit test suite:
-```bash
-npx vitest
-```
-
-### 6. Linting & Formatting
-Ensure code styling rules are satisfied:
-```bash
-npm run lint
-npm run prettier
+yarn build
 ```

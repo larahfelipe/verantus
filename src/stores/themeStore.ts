@@ -2,19 +2,18 @@ import { ref } from 'vue';
 
 import { defineStore } from 'pinia';
 
+import config from '@/config';
+
 const getInitialTheme = (): 'light' | 'dark' => {
-  const cached = localStorage.getItem('verantus@theme');
+  const cached = localStorage.getItem(config.STORAGE.THEME_KEY);
   if (cached === 'light' || cached === 'dark') return cached;
 
-  if (
+  const prefersLight =
     typeof window !== 'undefined' &&
-    window.matchMedia &&
-    window.matchMedia('(prefers-color-scheme: dark)').matches
-  ) {
-    return 'dark';
-  }
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(prefers-color-scheme: light)').matches;
 
-  return 'dark';
+  return prefersLight ? 'light' : 'dark';
 };
 
 export const useThemeStore = defineStore('theme', () => {
@@ -22,7 +21,7 @@ export const useThemeStore = defineStore('theme', () => {
 
   function toggleTheme() {
     currentTheme.value = currentTheme.value === 'dark' ? 'light' : 'dark';
-    localStorage.setItem('verantus@theme', currentTheme.value);
+    localStorage.setItem(config.STORAGE.THEME_KEY, currentTheme.value);
     applyTheme();
   }
 

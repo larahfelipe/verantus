@@ -1,14 +1,19 @@
 <template>
-  <div
+  <section
     v-if="asset"
+    aria-labelledby="condensed-statements-heading"
     class="rounded-xl bg-white dark:bg-zinc-900 border border-neutral-100 dark:border-neutral-800 shadow-md p-6 transition-all duration-200"
   >
     <div class="border-b border-neutral-100 dark:border-neutral-800 pb-4">
-      <h2 class="text-sm font-bold uppercase tracking-wider text-neutral-400">
+      <h2
+        id="condensed-statements-heading"
+        class="text-sm font-bold uppercase tracking-wider text-neutral-400"
+      >
         Condensed Financial Statements
       </h2>
+
       <p class="text-xs text-neutral-500 dark:text-neutral-400 mt-1">
-        Rentabilidade, Margens, Liquidez, and capital structure details
+        Profitability, margins, liquidity, and capital structure details
       </p>
     </div>
 
@@ -19,81 +24,77 @@
         >
           Profitability & Return
         </h3>
-        <div class="space-y-3">
+
+        <dl class="space-y-3">
           <div
             v-for="item in profitabilityItems"
             :key="item.label"
             class="flex justify-between items-center text-xs"
           >
-            <span class="font-medium text-neutral-500 dark:text-neutral-400">{{ item.label }}</span>
-            <span class="font-bold text-neutral-800 dark:text-neutral-200">{{ item.value }}</span>
+            <dt class="font-medium text-neutral-500 dark:text-neutral-400">{{ item.label }}</dt>
+
+            <dd class="font-bold text-neutral-800 dark:text-neutral-200">{{ item.value }}</dd>
           </div>
-        </div>
+        </dl>
       </div>
+
       <div class="space-y-4">
         <h3
           class="text-xs font-bold text-neutral-700 dark:text-neutral-300 uppercase tracking-wide border-b border-neutral-100 dark:border-neutral-800 pb-2"
         >
           Liquidity & Cash Flows
         </h3>
-        <div class="space-y-3">
+
+        <dl class="space-y-3">
           <div
             v-for="item in cashFlowItems"
             :key="item.label"
             class="flex justify-between items-center text-xs"
           >
-            <span class="font-medium text-neutral-500 dark:text-neutral-400">{{ item.label }}</span>
-            <span class="font-bold text-neutral-800 dark:text-neutral-200">{{ item.value }}</span>
+            <dt class="font-medium text-neutral-500 dark:text-neutral-400">{{ item.label }}</dt>
+
+            <dd class="font-bold text-neutral-800 dark:text-neutral-200">{{ item.value }}</dd>
           </div>
-        </div>
+        </dl>
       </div>
+
       <div class="space-y-4">
         <h3
           class="text-xs font-bold text-neutral-700 dark:text-neutral-300 uppercase tracking-wide border-b border-neutral-100 dark:border-neutral-800 pb-2"
         >
           Capital Structure
         </h3>
-        <div class="space-y-3">
+
+        <dl class="space-y-3">
           <div
             v-for="item in leverageItems"
             :key="item.label"
             class="flex justify-between items-center text-xs"
           >
-            <span class="font-medium text-neutral-500 dark:text-neutral-400">{{ item.label }}</span>
-            <span class="font-bold text-neutral-800 dark:text-neutral-200">{{ item.value }}</span>
+            <dt class="font-medium text-neutral-500 dark:text-neutral-400">{{ item.label }}</dt>
+
+            <dd class="font-bold text-neutral-800 dark:text-neutral-200">{{ item.value }}</dd>
           </div>
-        </div>
+        </dl>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import type { NormalizedAsset } from '../../../shared/types/domain';
+import type { NormalizedAsset } from '@/shared/types/domain';
+import { formatCompactMoney as formatAmount } from '@/shared/utils/formatMoney';
+import { formatPercent } from '@/shared/utils/formatPercent';
 
 const props = defineProps<{
   asset: NormalizedAsset | null;
 }>();
 
-const formatPercent = (val: number | null): string => {
-  if (val === null) return '—';
-  return `${(val * 100).toFixed(1)}%`;
-};
-
 const formatNum = (val: number | null): string => {
   if (val === null) return '—';
   return val.toFixed(2);
-};
-
-const formatAmount = (val: number | null, currency: string): string => {
-  if (val === null) return '—';
-  const prefix = currency === 'BRL' ? 'R$' : '$';
-  if (val >= 1e12) return `${prefix} ${(val / 1e12).toFixed(2)}T`;
-  if (val >= 1e9) return `${prefix} ${(val / 1e9).toFixed(2)}B`;
-  if (val >= 1e6) return `${prefix} ${(val / 1e6).toFixed(2)}M`;
-  return prefix + ' ' + val.toLocaleString();
 };
 
 const profitabilityItems = computed(() => {
