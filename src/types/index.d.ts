@@ -1,7 +1,5 @@
 import type { PropType } from 'vue';
 
-import type { ActionContext } from 'vuex';
-
 export type StockPayload = {
   symbol: string;
   exchange: string;
@@ -70,6 +68,51 @@ type StockStatisticsProps = {
   raw: number;
   fmt: string;
   longFmt?: string;
+};
+
+/** A single statement period row. Yahoo line items are sparse, so all optional. */
+type StatementRow = {
+  endDate?: StockStatisticsProps;
+} & Partial<Record<string, StockStatisticsProps>>;
+
+type IncomeStatementHistory = {
+  incomeStatementHistory: StatementRow[];
+};
+
+type BalanceSheetHistory = {
+  balanceSheetStatements: StatementRow[];
+};
+
+type CashflowStatementHistory = {
+  cashflowStatements: StatementRow[];
+};
+
+type PriceModule = {
+  marketCap?: StockStatisticsProps;
+  regularMarketPrice?: StockStatisticsProps;
+  regularMarketChange?: StockStatisticsProps;
+  regularMarketChangePercent?: StockStatisticsProps;
+  currency?: string;
+  currencySymbol?: string;
+};
+
+type SummaryDetail = {
+  trailingPE?: StockStatisticsProps;
+  forwardPE?: StockStatisticsProps;
+  priceToSalesTrailing12Months?: StockStatisticsProps;
+  dividendYield?: StockStatisticsProps;
+  payoutRatio?: StockStatisticsProps;
+  beta?: StockStatisticsProps;
+  marketCap?: StockStatisticsProps;
+};
+
+type EarningsTrendModule = {
+  trend: Array<{
+    period?: string;
+    growth?: StockStatisticsProps;
+    earningsEstimate?: { growth?: StockStatisticsProps };
+    revenueEstimate?: { growth?: StockStatisticsProps };
+  }>;
 };
 
 export type StockData = {
@@ -145,6 +188,12 @@ export type StockData = {
           recommendationKey: string;
           volume?: StockStatisticsProps;
         };
+        price?: PriceModule;
+        summaryDetail?: SummaryDetail;
+        incomeStatementHistory?: IncomeStatementHistory;
+        balanceSheetHistory?: BalanceSheetHistory;
+        cashflowStatementHistory?: CashflowStatementHistory;
+        earningsTrend?: EarningsTrendModule;
       }
     ];
     error: {
@@ -187,65 +236,4 @@ export type StockChart = {
   };
 };
 
-export type StockState = {
-  isLoading: boolean;
-  isFetching: boolean;
-  error: string | null;
-  stockData: StockDataDestructured | null;
-  stockChart: StockChartDestructured | null;
-};
-
-type Error = {
-  code: string;
-  description: string;
-};
-
-export type StockGetters = {
-  isLoading: (state: StockState) => boolean;
-  isFetching: (state: StockState) => boolean;
-  error: (state: StockState) => Error | null;
-  stockData: (state: StockState) => StockDataDestructured;
-  stockChart: (state: StockState) => StockChartDestructured;
-};
-
-export type StockMutations = {
-  setIsLoading: (state: StockState, payload: boolean) => void;
-  setIsFetching: (state: StockState, payload: boolean) => void;
-  setError: (state: StockState, payload: boolean) => void;
-  setStockData: (state: StockState, payload: StockDataDestructured) => void;
-  setStockChart: (state: StockState, payload: StockChartDestructured) => void;
-};
-
-export type StockActions = {
-  fetchStockData: (
-    context: ActionContext<StockDataDestructured, unknown>,
-    payload: StockPayload
-  ) => void;
-  fetchStockChart: (
-    context: ActionContext<StockChartDestructured, unknown>,
-    payload: StockPayload
-  ) => void;
-  fetchStock: (
-    context: ActionContext<StockDataDestructured, unknown>,
-    payload: StockPayload
-  ) => void;
-};
-
 export type Theme = 'light' | 'dark';
-
-export type ThemeState = {
-  currentTheme: Theme;
-};
-
-export type ThemeGetters = {
-  currentTheme: (state: ThemeState) => string;
-};
-
-export type ThemeMutations = {
-  setCurrentTheme: (state: ThemeState, payload: Theme) => void;
-};
-
-export type Store = {
-  stock: StockState;
-  theme: ThemeState;
-};

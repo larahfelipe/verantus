@@ -14,14 +14,14 @@
         class="w-full max-w-[1600px] mx-auto px-4 md:px-6 xl:px-8 flex justify-between items-center gap-4"
       >
         <div class="flex items-center gap-6">
-          <div class="flex items-center cursor-pointer" @click="$router.push('/')">
+          <router-link to="/" class="flex items-center group" aria-label="Verantus home">
             <span
-              class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-slate-900 via-slate-800 to-emerald-600 dark:from-white dark:via-neutral-200 dark:to-emerald-400 bg-clip-text text-transparent"
+              class="font-extrabold text-lg tracking-tight bg-clip-text text-transparent logo-gradient"
               >verantus</span
             >
-          </div>
+          </router-link>
 
-          <nav class="hidden md:flex items-center gap-1">
+          <nav class="hidden md:flex items-center gap-1" aria-label="Primary">
             <router-link
               to="/"
               class="px-3 py-1.5 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200"
@@ -38,43 +38,47 @@
 
         <div class="flex items-center gap-4 flex-1 justify-end">
           <div class="relative w-full max-w-xs flex flex-col">
-            <div
+            <form
+              role="search"
               class="flex items-center gap-2 px-3 py-1.5 bg-neutral-100 dark:bg-neutral-800/80 rounded-xl border border-transparent focus-within:border-emerald-500/80 focus-within:ring-2 focus-within:ring-emerald-500/20 focus-within:bg-white dark:focus-within:bg-zinc-900 transition-all duration-200 w-full"
               :class="{
                 'border-rose-500/50 focus-within:border-rose-500/80 focus-within:ring-2 focus-within:ring-rose-500/20':
                   error,
                 'shadow-sm': isFocused
               }"
+              @submit.prevent="handleSearch"
             >
+              <label for="search-input" class="sr-only">Search asset ticker symbol</label>
+
               <input
                 id="search-input"
                 v-model.trim="symbolInput"
-                type="text"
+                type="search"
                 placeholder="Search symbol (e.g. AAPL, PETR4)..."
-                aria-label="Search asset ticker symbol"
                 :disabled="isLoading"
+                :aria-invalid="error ? 'true' : 'false'"
+                aria-describedby="search-error"
                 class="flex-1 bg-transparent text-xs font-semibold text-neutral-900 dark:text-neutral-50 placeholder-neutral-400 focus:outline-none w-full"
                 @focus="isFocused = true"
                 @blur="isFocused = false"
-                @keyup.enter="handleSearch"
               />
 
               <button
                 type="button"
                 class="px-2 py-0.5 text-[10px] font-bold font-mono rounded bg-white dark:bg-zinc-700 text-neutral-500 hover:text-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-200 border border-neutral-200 dark:border-neutral-600 transition-all duration-150 select-none focus:outline-none"
-                aria-label="Toggle exchange market between US and Brazil"
+                :aria-label="`Exchange market: ${exchangeLabel}. Toggle US / Brazil.`"
+                :aria-pressed="isBrazilExchange ? 'true' : 'false'"
                 :disabled="isLoading"
                 @click="toggleExchange"
               >
-                {{ selectedExchange === '' ? 'US' : 'BR' }}
+                {{ exchangeLabel }}
               </button>
 
               <button
-                type="button"
+                type="submit"
                 class="text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors focus:outline-none"
                 aria-label="Submit search"
                 :disabled="isLoading || !symbolInput.length"
-                @click="handleSearch"
               >
                 <svg
                   class="w-3.5 h-3.5"
@@ -83,6 +87,7 @@
                   stroke-width="2.5"
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
                 >
                   <path
                     stroke-linecap="round"
@@ -91,15 +96,17 @@
                   />
                 </svg>
               </button>
-            </div>
+            </form>
 
             <Transition name="slide-up">
-              <div
+              <p
                 v-if="error"
+                id="search-error"
+                role="alert"
                 class="absolute top-full left-0 right-0 pt-1 text-[10px] font-bold text-rose-500 truncate z-10"
               >
-                <span>{{ error }}</span>
-              </div>
+                {{ error }}
+              </p>
             </Transition>
           </div>
 
@@ -107,7 +114,9 @@
             id="theme-toggle"
             type="button"
             class="h-8 w-8 rounded-lg bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center text-neutral-500 hover:text-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-200 transition-all focus:outline-none"
-            aria-label="Toggle light and dark color theme"
+            :aria-label="
+              themeStore.currentTheme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'
+            "
             @click="themeStore.toggleTheme()"
           >
             <svg
@@ -118,6 +127,7 @@
               stroke-width="2"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
             >
               <path
                 stroke-linecap="round"
@@ -125,6 +135,7 @@
                 d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"
               />
             </svg>
+
             <svg
               v-else
               class="w-4 h-4"
@@ -133,6 +144,7 @@
               stroke-width="2"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
             >
               <path
                 stroke-linecap="round"
@@ -152,10 +164,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 
-import { useStockStore } from '../stores/stockStore';
-import { useThemeStore } from '../stores/themeStore';
+import config from '@/config';
+import { useStockStore } from '@/stores/stockStore';
+import { useThemeStore } from '@/stores/themeStore';
 
 const stockStore = useStockStore();
 const themeStore = useThemeStore();
@@ -167,6 +180,11 @@ const selectedExchange = ref('');
 
 const isLoading = computed(() => stockStore.isLoading);
 const error = computed(() => stockStore.error);
+
+const isBrazilExchange = computed(
+  () => selectedExchange.value === config.STOCK.BRAZIL_EXCHANGE_SUFFIX
+);
+const exchangeLabel = computed(() => (isBrazilExchange.value ? 'BR' : 'US'));
 
 const handleScroll = () => {
   isScrolled.value = window.scrollY > 0;
@@ -188,7 +206,7 @@ const handleSearch = async () => {
 };
 
 const toggleExchange = () => {
-  selectedExchange.value = selectedExchange.value === '' ? '.SA' : '';
+  selectedExchange.value = selectedExchange.value === '' ? config.STOCK.BRAZIL_EXCHANGE_SUFFIX : '';
 };
 </script>
 
@@ -201,5 +219,43 @@ const toggleExchange = () => {
 .slide-up-leave-to {
   opacity: 0;
   transform: translateY(2px);
+}
+
+.logo-gradient {
+  background-image: linear-gradient(
+    to right,
+    #0f172a 0%,
+    #1e293b 25%,
+    #059669 50%,
+    #1e293b 75%,
+    #0f172a 100%
+  );
+  background-size: 200% 100%;
+  background-position: 0% center;
+  transition: background-position 0.5s ease-out;
+}
+
+.dark .logo-gradient {
+  background-image: linear-gradient(
+    to right,
+    #ffffff 0%,
+    #e5e5e5 25%,
+    #34d399 50%,
+    #e5e5e5 75%,
+    #ffffff 100%
+  );
+}
+
+.group:hover .logo-gradient {
+  animation: gradient-flow 3s linear infinite;
+}
+
+@keyframes gradient-flow {
+  0% {
+    background-position: 0% center;
+  }
+  100% {
+    background-position: -200% center;
+  }
 }
 </style>

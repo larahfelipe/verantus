@@ -3,6 +3,26 @@ export interface MetricValue {
   fmt: string;
 }
 
+/**
+ * Confidence/provenance of a given section of the asset payload.
+ * - `live`         : computed directly from a real upstream provider response.
+ * - `derived`      : computed by us from real inputs (transparent formula).
+ */
+export type DataConfidence = 'live' | 'derived';
+
+export interface AssetProvenance {
+  /** Quote, multiples and ratios (profile + metrics). */
+  fundamentals: DataConfidence;
+  /** 5-year income statement / balance sheet / cash flow tables. */
+  financials: DataConfidence;
+  /** DCF scenarios + reverse DCF model. */
+  valuationModel: DataConfidence;
+  /** Bull/bear case, moat, capital allocation, risk narrative. */
+  thesis: DataConfidence;
+  /** Company background, segments, competitors, filings analysis. */
+  research: DataConfidence;
+}
+
 export interface AssetProfile {
   symbol: string;
   name: string;
@@ -18,6 +38,9 @@ export interface AssetProfile {
   currentPrice: number | null;
   priceChange: number | null;
   priceChangePercent: number | null;
+  change7dPercent?: number | null;
+  change1mPercent?: number | null;
+  change1yPercent?: number | null;
 }
 
 export interface ValuationMetrics {
@@ -27,8 +50,10 @@ export interface ValuationMetrics {
   evToEbitda: number | null;
   evToEbit: number | null;
   priceToSales: number | null;
+  evToSales: number | null; // distinct from P/S (enterprise value based)
   priceToBook: number | null;
   enterpriseValue: number | null;
+  marketCap: number | null;
   dividendYield: number | null;
 }
 
@@ -121,19 +146,6 @@ export interface HistoricalPoint {
   volume: number | null;
 }
 
-export interface PeerBenchmark {
-  symbol: string;
-  name: string;
-  metrics: {
-    pe: number | null;
-    roe: number | null;
-    netMargin: number | null;
-    debtToEquity: number | null;
-    currentRatio: number | null;
-    dividendYield: number | null;
-  };
-}
-
 export interface FinancialStatementYearly {
   year: number;
   revenue: number | null;
@@ -162,7 +174,6 @@ export interface FinancialsMetricsEvolution {
   volatilityRevenue: number | null; // Std dev
   trendRevenue: 'improving' | 'deteriorating' | 'stable';
   trendMargin: 'improving' | 'deteriorating' | 'stable';
-  structuralShifts: string[];
 }
 
 export interface MoatAnalysis {
@@ -199,7 +210,6 @@ export interface ValuationDCFScenario {
 
 export interface ReverseDCFImplied {
   impliedGrowthRate: number;
-  impliedOperatingMargin: number;
   expectedReturn: number;
 }
 
@@ -213,15 +223,9 @@ export interface ValuationFramework {
   currentPrice: number;
 }
 
-export interface SegmentRevenue {
-  name: string;
-  revenueShare: number;
-}
-
 export interface CompanyResearch {
   history: string;
   businessModel: string;
-  segments: SegmentRevenue[];
   keyProducts: string[];
   keyCompetitors: string[];
   regulatoryRisks: string[];
@@ -252,9 +256,9 @@ export interface NormalizedAsset {
   metrics: AssetMetrics;
   scores: AssetScores;
   history: HistoricalPoint[];
-  peers: PeerBenchmark[];
   financialsHistory: FinancialStatementYearly[];
   evolutionStats: FinancialsMetricsEvolution;
   thesis: InvestmentThesis;
   research: CompanyResearch;
+  provenance: AssetProvenance;
 }

@@ -5,7 +5,7 @@ import config from '@/config';
 const api = axios.create({
   baseURL: 'https://yfapi.net',
   headers: {
-    'x-api-key': config.yahooFinanceApiKey
+    'x-api-key': config.YAHOO_FINANCE.API_KEY
   }
 });
 

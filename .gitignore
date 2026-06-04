@@ -2,4 +2,6 @@ node_modules
 dist
 .DS_Store
 .env.local
+.claude
 .antigravitycli
+*.log

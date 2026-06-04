@@ -2,32 +2,50 @@ import type { AxiosResponse } from 'axios';
 
 import config from '@/config';
 import api from '@/services/api';
-import type { StockData, StockChart } from '@/types';
-
 import type {
-  NormalizedAsset,
-  HistoricalPoint,
+  AssetMetrics,
   AssetProfile,
-  AssetMetrics
-} from '../../types/domain';
-import { computeQuantitativeScores } from '../../utils/scoring';
+  HistoricalPoint,
+  NormalizedAsset
+} from '@/shared/types/domain';
+import { computeQuantitativeScores } from '@/shared/utils/scoring';
+import type { StockChart, StockData } from '@/types';
+
+import {
+  buildFinancialsHistory,
+  computeEvolutionStats,
+  computeValuationModel,
+  deriveCapitalAllocation,
+  deriveMoat,
+  deriveResearch,
+  deriveRisks,
+  deriveThesis
+} from './deriveAnalysis';
 import type { IFinancialDataProvider } from './IFinancialDataProvider';
+import { getFmt, getRaw, normalizeYield } from './yahooParse';
 
-const getRaw = (obj: unknown): number | null => {
-  if (obj && typeof obj === 'object' && 'raw' in obj) {
-    const rawVal = (obj as Record<string, unknown>).raw;
-    return typeof rawVal === 'number' ? rawVal : null;
-  }
-  return null;
-};
+type Row = Record<string, unknown>;
 
-const getFmt = (obj: unknown, fallback = '—'): string => {
-  if (obj && typeof obj === 'object' && 'fmt' in obj) {
-    const fmtVal = (obj as Record<string, unknown>).fmt;
-    return fmtVal !== null && fmtVal !== undefined ? String(fmtVal) : fallback;
+function formatChartLabel(timestampSeconds: number, range: string): string {
+  const date = new Date(timestampSeconds * 1000);
+  if (range === '1d') {
+    return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
   }
-  return fallback;
-};
+  if (config.YAHOO_FINANCE.INTRADAY_RANGES.has(range)) {
+    return date.toLocaleString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  }
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+/** Yahoo returns ratio changes as fractions; convert to a 2-decimal percentage number, keeping null. */
+function fractionToPercent(fraction: number | null): number | null {
+  return fraction !== null ? Number((fraction * 100).toFixed(2)) : null;
+}
 
 export class YahooFinanceProvider implements IFinancialDataProvider {
   public name = 'Yahoo Finance';
@@ -35,15 +53,10 @@ export class YahooFinanceProvider implements IFinancialDataProvider {
   async fetchAssetData(
     symbol: string,
     exchange: string
-  ): Promise<
-    Omit<
-      NormalizedAsset,
-      'history' | 'peers' | 'financialsHistory' | 'evolutionStats' | 'thesis' | 'research'
-    >
-  > {
-    const fmtStockSymbol = symbol + exchange;
-    const modules = config.yahooFinanceApiModules;
-    const endpointUrl = `/v11/finance/quoteSummary/${fmtStockSymbol}?modules=${modules}`;
+  ): Promise<Omit<NormalizedAsset, 'history'>> {
+    const qualifiedSymbol = symbol + exchange;
+    const modules = config.YAHOO_FINANCE.API_MODULES;
+    const endpointUrl = `/v11/finance/quoteSummary/${qualifiedSymbol}?modules=${modules}`;
 
     const { data }: AxiosResponse<StockData> = await api.get(endpointUrl);
     const { result, error } = data.quoteSummary;
@@ -52,131 +65,154 @@ export class YahooFinanceProvider implements IFinancialDataProvider {
       throw new Error(error.code || 'Failed to fetch Yahoo Finance stock summary');
     }
 
-    if (!result || !result[0]) {
+    if (!result?.[0]) {
       throw new Error('No stock summary returned from Yahoo Finance');
     }
 
     const rawData = result[0];
-    const ap = rawData.assetProfile || {};
-    const qt = rawData.quoteType || {};
-    const dks = rawData.defaultKeyStatistics || {};
-    const fd = rawData.financialData || {};
+    const assetProfile = rawData.assetProfile || {};
+    const quoteType = rawData.quoteType || {};
+    const keyStatistics = rawData.defaultKeyStatistics || {};
+    const financialData = rawData.financialData || {};
+    const summaryDetail = (rawData.summaryDetail ?? {}) as Row;
+    const priceModule = (rawData.price ?? {}) as Row;
+
+    const currentPrice =
+      getRaw(priceModule.regularMarketPrice) ?? getRaw(financialData.currentPrice);
 
     const profile: AssetProfile = {
-      symbol: qt.symbol || symbol,
-      name: qt.longName || qt.shortName || symbol,
-      shortName: qt.shortName || symbol,
-      exchange: qt.exchange || '—',
-      sector: ap.sector || 'Broad Market',
-      industry: ap.industry || '—',
-      country: ap.country || '—',
-      employees: ap.fullTimeEmployees || null,
-      website: ap.website || '',
-      businessSummary: ap.longBusinessSummary || 'No summary available.',
-      currency: fd.financialCurrency || 'USD',
-      currentPrice: getRaw(fd.currentPrice),
-      priceChange: null, // Computed inside repository or overview if chart available
-      priceChangePercent: null
+      symbol: quoteType.symbol || symbol,
+      name: quoteType.longName || quoteType.shortName || symbol,
+      shortName: quoteType.shortName || symbol,
+      exchange: quoteType.exchange || '—',
+      sector: assetProfile.sector || 'Broad Market',
+      industry: assetProfile.industry || '—',
+      country: assetProfile.country || '—',
+      employees: assetProfile.fullTimeEmployees || null,
+      website: assetProfile.website || '',
+      businessSummary: assetProfile.longBusinessSummary || 'No summary available.',
+      currency: financialData.financialCurrency || (priceModule.currency as string) || 'USD',
+      currentPrice,
+      priceChange: getRaw(priceModule.regularMarketChange),
+      priceChangePercent: fractionToPercent(getRaw(priceModule.regularMarketChangePercent)),
+      change1yPercent: fractionToPercent(getRaw(keyStatistics['52WeekChange']))
     };
 
-    const currentPriceVal = getRaw(fd.currentPrice);
-    const trailingEpsVal = getRaw(dks.trailingEps);
-    const trailingPeVal = getRaw(dks.trailingPE);
-    let computedPe: number | null = trailingPeVal;
-    if (
-      computedPe === null &&
-      currentPriceVal !== null &&
-      trailingEpsVal !== null &&
-      trailingEpsVal !== 0
-    ) {
-      computedPe = currentPriceVal / trailingEpsVal;
+    const trailingEps = getRaw(keyStatistics.trailingEps);
+    let trailingPe: number | null =
+      getRaw(summaryDetail.trailingPE) ?? getRaw(keyStatistics.trailingPE);
+    if (trailingPe === null && currentPrice !== null && trailingEps !== null && trailingEps !== 0) {
+      trailingPe = currentPrice / trailingEps;
     }
 
-    if (computedPe !== null && (isNaN(computedPe) || computedPe === Infinity)) {
-      computedPe = null;
-    }
+    const sharesOutstanding = getRaw(keyStatistics.sharesOutstanding);
+    const enterpriseValue = getRaw(keyStatistics.enterpriseValue);
+    const marketCap =
+      getRaw(priceModule.marketCap) ??
+      getRaw(summaryDetail.marketCap) ??
+      (currentPrice !== null && sharesOutstanding !== null && sharesOutstanding > 0
+        ? currentPrice * sharesOutstanding
+        : null);
 
-    const valuation: {
-      pe: number | null;
-      forwardPe: number | null;
-      pegRatio: number | null;
-      evToEbitda: number | null;
-      evToEbit: number | null;
-      priceToSales: number | null;
-      priceToBook: number | null;
-      enterpriseValue: number | null;
-      dividendYield: number | null;
-    } = {
-      pe: computedPe,
-      forwardPe: getRaw(dks.forwardPE),
-      pegRatio: getRaw(dks.pegRatio),
-      evToEbitda: getRaw(dks.enterpriseToEbitda),
+    const totalRevenue = getRaw(financialData.totalRevenue);
+    // Equity-based P/S; EV/Sales (enterprise-based) is tracked separately below.
+    const priceToSales =
+      getRaw(summaryDetail.priceToSalesTrailing12Months) ??
+      (marketCap !== null && totalRevenue !== null && totalRevenue > 0
+        ? marketCap / totalRevenue
+        : null);
+
+    const income = (rawData.incomeStatementHistory?.incomeStatementHistory ?? []) as Row[];
+    const balance = (rawData.balanceSheetHistory?.balanceSheetStatements ?? []) as Row[];
+    const cashflow = (rawData.cashflowStatementHistory?.cashflowStatements ?? []) as Row[];
+    const financialsHistory = buildFinancialsHistory(income, balance, cashflow);
+    const evolutionStats = computeEvolutionStats(financialsHistory);
+    const latest = financialsHistory[financialsHistory.length - 1];
+
+    const operatingCashFlow =
+      getRaw(financialData.operatingCashflow) ?? latest?.operatingCashFlow ?? null;
+    const freeCashFlow = getRaw(financialData.freeCashflow) ?? latest?.freeCashFlow ?? null;
+    const revenueGrowth = getRaw(financialData.revenueGrowth);
+    const dividendYield = normalizeYield(
+      getRaw(summaryDetail.dividendYield) ?? getRaw(keyStatistics.dividendYield)
+    );
+
+    const valuation = {
+      pe: trailingPe,
+      forwardPe: getRaw(summaryDetail.forwardPE) ?? getRaw(keyStatistics.forwardPE),
+      pegRatio: getRaw(keyStatistics.pegRatio),
+      evToEbitda: getRaw(keyStatistics.enterpriseToEbitda),
       evToEbit: null,
-      priceToSales: getRaw(dks.enterpriseToRevenue),
-      priceToBook: getRaw(dks.priceToBook),
-      enterpriseValue: getRaw(dks.enterpriseValue),
-      dividendYield: getRaw(dks.dividendYield)
+      priceToSales,
+      evToSales: getRaw(keyStatistics.enterpriseToRevenue),
+      priceToBook: getRaw(keyStatistics.priceToBook),
+      enterpriseValue,
+      marketCap,
+      dividendYield
     };
-
-    const roeVal = getRaw(fd.returnOnEquity);
 
     const profitability = {
-      roe: roeVal,
-      roa: getRaw(fd.returnOnAssets),
-      roic: roeVal !== null ? roeVal * 0.85 : null,
-      croic: roeVal !== null ? roeVal * 0.78 : null,
-      grossMargin: getRaw(fd.grossMargins),
-      operatingMargin: getRaw(fd.operatingMargins),
-      netMargin: getRaw(fd.profitMargins)
+      roe: getRaw(financialData.returnOnEquity),
+      roa: getRaw(financialData.returnOnAssets),
+      // ROIC/CROIC from the latest statement year (NOPAT / invested capital).
+      roic: latest?.roic ?? null,
+      croic: latest?.croic ?? null,
+      grossMargin: getRaw(financialData.grossMargins),
+      operatingMargin: getRaw(financialData.operatingMargins),
+      netMargin: getRaw(financialData.profitMargins)
     };
-
-    const revenueGrowthVal = getRaw(fd.revenueGrowth);
 
     const growth = {
-      revenueGrowth3Yr: revenueGrowthVal !== null ? revenueGrowthVal * 0.95 : null,
+      revenueGrowth3Yr: evolutionStats.cagrRevenue,
       ebitdaGrowth3Yr: null,
-      netIncomeGrowth3Yr: null,
+      netIncomeGrowth3Yr: evolutionStats.cagrNetIncome,
       dividendGrowth3Yr: null,
-      quarterlyRevenueGrowth: revenueGrowthVal,
-      quarterlyEarningsGrowth: getRaw(dks.quarterlyEarningsGrowth)
+      quarterlyRevenueGrowth: revenueGrowth,
+      quarterlyEarningsGrowth: getRaw(keyStatistics.quarterlyEarningsGrowth)
     };
 
-    const operatingCashFlowVal = getRaw(fd.operatingCashflow);
-    const freeCashFlowVal = getRaw(fd.freeCashflow);
-    const marketCapVal = getRaw(dks.marketCap) || getRaw(dks.enterpriseValue) || 1;
-
     const cashFlow = {
-      operatingCashFlow: operatingCashFlowVal,
-      freeCashFlow: freeCashFlowVal,
-      fcfYield: freeCashFlowVal ? freeCashFlowVal / marketCapVal : null,
+      operatingCashFlow,
+      freeCashFlow,
+      // FCF yield is measured against equity value (market cap), not enterprise value.
+      fcfYield:
+        freeCashFlow !== null && marketCap !== null && marketCap > 0
+          ? freeCashFlow / marketCap
+          : null,
       cashConversionRatio:
-        freeCashFlowVal && operatingCashFlowVal ? freeCashFlowVal / operatingCashFlowVal : null
+        freeCashFlow !== null && operatingCashFlow !== null && operatingCashFlow !== 0
+          ? freeCashFlow / operatingCashFlow
+          : null
     };
 
     const leverage = {
-      debtToEquity: getRaw(fd.debtToEquity),
+      debtToEquity: getRaw(financialData.debtToEquity),
       netDebtToEbitda: null,
       interestCoverage: null,
-      currentRatio: getRaw(fd.currentRatio),
-      quickRatio: getRaw(fd.quickRatio),
-      totalDebt: getRaw(fd.totalDebt),
-      totalCash: getRaw(fd.totalCash)
+      currentRatio: getRaw(financialData.currentRatio),
+      quickRatio: getRaw(financialData.quickRatio),
+      totalDebt: getRaw(financialData.totalDebt),
+      totalCash: getRaw(financialData.totalCash)
     };
 
-    const lastDividendVal = getRaw(dks.lastDividendValue);
-    const payoutRatioVal = getRaw(dks.payoutRatio);
+    const lastDividend = getRaw(keyStatistics.lastDividendValue);
+    const payoutRatio = getRaw(summaryDetail.payoutRatio) ?? getRaw(keyStatistics.payoutRatio);
     let dividendGrowthOutlook = '—';
-    if (lastDividendVal && lastDividendVal > 0) {
+    if (lastDividend && lastDividend > 0) {
       dividendGrowthOutlook =
-        payoutRatioVal !== null && payoutRatioVal < 0.6 ? 'Supported' : 'Constrained';
+        payoutRatio !== null && payoutRatio < 0.6 ? 'Supported' : 'Constrained';
     }
 
     const dividends = {
-      dividendYield: getRaw(dks.dividendYield),
-      payoutRatio: payoutRatioVal,
+      dividendYield,
+      payoutRatio,
       dividendGrowth: dividendGrowthOutlook,
-      lastDividend: lastDividendVal,
-      exDividendDate: getFmt(dks.exDividendDate) || getFmt(dks.lastDividendDate) || '—'
+      lastDividend,
+      exDividendDate:
+        getFmt(summaryDetail.exDividendDate) ||
+        getFmt(keyStatistics.exDividendDate) ||
+        getFmt(keyStatistics.lastDividendDate) ||
+        '—'
     };
 
     const metrics: AssetMetrics = {
@@ -190,10 +226,47 @@ export class YahooFinanceProvider implements IFinancialDataProvider {
 
     const scores = computeQuantitativeScores(metrics, profile);
 
+    const valuationModel = computeValuationModel(
+      currentPrice,
+      freeCashFlow,
+      sharesOutstanding,
+      growth.revenueGrowth3Yr ?? growth.quarterlyRevenueGrowth,
+      getRaw(summaryDetail.beta)
+    );
+    const moat = deriveMoat(metrics);
+    const capitalAllocation = deriveCapitalAllocation(metrics, financialsHistory);
+    const risks = deriveRisks(metrics, { valuation: scores.valuation.score });
+    const thesis = deriveThesis(
+      metrics,
+      {
+        businessQuality: scores.businessQuality.score,
+        growth: scores.growth.score,
+        financialHealth: scores.financialHealth.score,
+        valuation: scores.valuation.score
+      },
+      valuationModel,
+      moat,
+      capitalAllocation,
+      risks,
+      currentPrice ?? 0
+    );
+    const research = deriveResearch(profile, financialData.recommendationKey || '');
+
     return {
       profile,
       metrics,
-      scores
+      scores,
+      financialsHistory,
+      evolutionStats,
+      thesis,
+      research,
+      provenance: {
+        fundamentals: 'live',
+        financials: 'live',
+        valuationModel: 'derived',
+        thesis: 'derived',
+        research: 'live'
+      }
     };
   }
 
@@ -202,8 +275,10 @@ export class YahooFinanceProvider implements IFinancialDataProvider {
     exchange: string,
     range: string
   ): Promise<HistoricalPoint[]> {
-    const fmtStockSymbol = symbol + exchange;
-    const endpointUrl = `/v8/finance/chart/${fmtStockSymbol}?range=${range}`;
+    const qualifiedSymbol = symbol + exchange;
+    const interval =
+      config.YAHOO_FINANCE.RANGE_INTERVALS[range] ?? config.YAHOO_FINANCE.FALLBACK_CHART_INTERVAL;
+    const endpointUrl = `/v8/finance/chart/${qualifiedSymbol}?range=${range}&interval=${interval}`;
 
     const { data }: AxiosResponse<StockChart> = await api.get(endpointUrl);
     const { result, error } = data.chart;
@@ -212,7 +287,7 @@ export class YahooFinanceProvider implements IFinancialDataProvider {
       throw new Error(error.code || 'Failed to fetch Yahoo Finance stock chart');
     }
 
-    if (!result || !result[0]) {
+    if (!result?.[0]) {
       return [];
     }
 
@@ -225,21 +300,14 @@ export class YahooFinanceProvider implements IFinancialDataProvider {
     const lowSeries = quote.low || [];
     const volumeSeries = quote.volume || [];
 
-    return timestamps.map((ts, idx) => {
-      const dateObj = new Date(ts * 1000);
-      return {
-        timestamp: ts,
-        date: dateObj.toLocaleDateString('en-US', {
-          month: 'short',
-          day: 'numeric',
-          year: 'numeric'
-        }),
-        open: openSeries[idx] !== undefined ? openSeries[idx] : null,
-        high: highSeries[idx] !== undefined ? highSeries[idx] : null,
-        low: lowSeries[idx] !== undefined ? lowSeries[idx] : null,
-        close: closeSeries[idx] !== undefined ? closeSeries[idx] : null,
-        volume: volumeSeries[idx] !== undefined ? volumeSeries[idx] : null
-      };
-    });
+    return timestamps.map((timestamp, index) => ({
+      timestamp,
+      date: formatChartLabel(timestamp, range),
+      open: openSeries[index] ?? null,
+      high: highSeries[index] ?? null,
+      low: lowSeries[index] ?? null,
+      close: closeSeries[index] ?? null,
+      volume: volumeSeries[index] ?? null
+    }));
   }
 }
