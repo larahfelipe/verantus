@@ -209,6 +209,8 @@
 
             <CondensedStatements :asset="stockStore.currentAsset" />
 
+            <CommonSizeIncomeCard :asset="stockStore.currentAsset" />
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <section
                 aria-labelledby="cagr-heading"
@@ -913,6 +915,7 @@ import QuantitativeScoresCard from '@/modules/asset-analysis/components/Quantita
 import StockHistoryChart from '@/modules/asset-analysis/components/StockHistoryChart.vue';
 import DividendsCard from '@/modules/dividends/components/DividendsCard.vue';
 import AnnualStatementsTable from '@/modules/financial-statements/components/AnnualStatementsTable.vue';
+import CommonSizeIncomeCard from '@/modules/financial-statements/components/CommonSizeIncomeCard.vue';
 import CondensedStatements from '@/modules/financial-statements/components/CondensedStatements.vue';
 import ValuationMetricsCard from '@/modules/valuation/components/ValuationMetricsCard.vue';
 import DataQualityBadge from '@/shared/components/ui/DataQualityBadge.vue';

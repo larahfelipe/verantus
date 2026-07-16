@@ -5,6 +5,7 @@ import type {
   AssetScores,
   CompanyResearch,
   FinancialStatementYearly,
+  IncomeStatementAnalysis,
   InvestmentThesis
 } from '@/shared/types/domain';
 
@@ -16,6 +17,7 @@ import {
   deriveRisks,
   deriveThesis
 } from './analysis';
+import { computeIncomeStatementAnalysis } from './incomeAnalysis';
 import { computeQuantitativeScores } from './scoring';
 
 export interface AssetAnalysisInput {
@@ -31,6 +33,7 @@ export interface AssetAnalysisInput {
 
 export interface AssetAnalysis {
   scores: AssetScores;
+  incomeAnalysis: IncomeStatementAnalysis;
   thesis: InvestmentThesis;
   research: CompanyResearch;
   provenance: AssetProvenance;
@@ -72,9 +75,11 @@ export function assembleAssetAnalysis(input: AssetAnalysisInput): AssetAnalysis 
     currentPrice ?? 0
   );
   const research = deriveResearch(profile, input.recommendationKey);
+  const incomeAnalysis = computeIncomeStatementAnalysis(financialsHistory);
 
   return {
     scores,
+    incomeAnalysis,
     thesis,
     research,
     provenance: {
@@ -82,7 +87,8 @@ export function assembleAssetAnalysis(input: AssetAnalysisInput): AssetAnalysis 
       financials: 'live',
       valuationModel: 'derived',
       thesis: 'derived',
-      research: 'live'
+      research: 'live',
+      incomeAnalysis: 'derived'
     }
   };
 }

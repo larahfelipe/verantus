@@ -23,6 +23,7 @@ export default defineConfig({
       thresholds: {
         'src/core/scoring.ts': { statements: 95, branches: 75, functions: 100, lines: 95 },
         'src/core/analysis.ts': { statements: 88, branches: 40, functions: 90, lines: 88 },
+        'src/core/incomeAnalysis.ts': { statements: 100, branches: 90, functions: 100, lines: 100 },
         'src/shared/services/providers/normalizeStatements.ts': {
           statements: 95,
           branches: 40,

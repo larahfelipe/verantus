@@ -100,6 +100,35 @@ exports[`Financial data assembly — golden regression > produces a stable asset
     "lastClose": 40.59000015258789,
     "length": 23,
   },
+  "incomeAnalysis": {
+    "netMarginTrend": "deteriorating",
+    "years": [
+      {
+        "netIncome": 188328000000,
+        "netMargin": 0.2936861409483888,
+        "revenue": 641256000000,
+        "year": 2022,
+      },
+      {
+        "netIncome": 123919831600,
+        "netMargin": 0.24298645626849202,
+        "revenue": 509986579100,
+        "year": 2023,
+      },
+      {
+        "netIncome": 43473447200,
+        "netMargin": 0.08234882296315743,
+        "revenue": 527918258400,
+        "year": 2024,
+      },
+      {
+        "netIncome": 103667520000,
+        "netMargin": 0.22012444643758058,
+        "revenue": 470949600000,
+        "year": 2025,
+      },
+    ],
+  },
   "metrics": {
     "cashFlow": {
       "cashConversionRatio": 0.4253616211194196,
@@ -176,6 +205,7 @@ exports[`Financial data assembly — golden regression > produces a stable asset
   "provenance": {
     "financials": "live",
     "fundamentals": "live",
+    "incomeAnalysis": "derived",
     "research": "live",
     "thesis": "derived",
     "valuationModel": "derived",
@@ -576,6 +606,35 @@ exports[`Financial data assembly — golden regression > produces a stable asset
     "lastClose": 327.5,
     "length": 20,
   },
+  "incomeAnalysis": {
+    "netMarginTrend": "improving",
+    "years": [
+      {
+        "netIncome": 99803000000,
+        "netMargin": 0.2530964070519973,
+        "revenue": 394328000000,
+        "year": 2022,
+      },
+      {
+        "netIncome": 96995000000,
+        "netMargin": 0.2530623426432028,
+        "revenue": 383285000000,
+        "year": 2023,
+      },
+      {
+        "netIncome": 93736000000,
+        "netMargin": 0.23971255769943867,
+        "revenue": 391035000000,
+        "year": 2024,
+      },
+      {
+        "netIncome": 112010000000,
+        "netMargin": 0.2691506412181824,
+        "revenue": 416161000000,
+        "year": 2025,
+      },
+    ],
+  },
   "metrics": {
     "cashFlow": {
       "cashConversionRatio": 0.7209335381362467,
@@ -652,6 +711,7 @@ exports[`Financial data assembly — golden regression > produces a stable asset
   "provenance": {
     "financials": "live",
     "fundamentals": "live",
+    "incomeAnalysis": "derived",
     "research": "live",
     "thesis": "derived",
     "valuationModel": "derived",

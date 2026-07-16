@@ -21,6 +21,8 @@ export interface AssetProvenance {
   thesis: DataConfidence;
   /** Company background, segments, competitors, filings analysis. */
   research: DataConfidence;
+  /** Common-size income statement and margin-trend analysis. */
+  incomeAnalysis: DataConfidence;
 }
 
 export interface AssetProfile {
@@ -168,12 +170,31 @@ export interface FinancialStatementYearly {
   croic: number | null;
 }
 
+export type MetricTrend = 'improving' | 'deteriorating' | 'stable';
+
 export interface FinancialsMetricsEvolution {
   cagrRevenue: number | null;
   cagrNetIncome: number | null;
   volatilityRevenue: number | null; // Std dev
-  trendRevenue: 'improving' | 'deteriorating' | 'stable';
-  trendMargin: 'improving' | 'deteriorating' | 'stable';
+  trendRevenue: MetricTrend;
+  trendMargin: MetricTrend;
+}
+
+/**
+ * Net margin per year. The current data source zeroes out gross profit and EBIT,
+ * so gross/operating margins are not derivable; only net margin (net income over
+ * revenue) uses real reported figures.
+ */
+export interface IncomeStatementYearBreakdown {
+  year: number;
+  revenue: number | null;
+  netIncome: number | null;
+  netMargin: number | null;
+}
+
+export interface IncomeStatementAnalysis {
+  years: IncomeStatementYearBreakdown[];
+  netMarginTrend: MetricTrend;
 }
 
 export interface MoatAnalysis {
@@ -258,6 +279,7 @@ export interface NormalizedAsset {
   history: HistoricalPoint[];
   financialsHistory: FinancialStatementYearly[];
   evolutionStats: FinancialsMetricsEvolution;
+  incomeAnalysis: IncomeStatementAnalysis;
   thesis: InvestmentThesis;
   research: CompanyResearch;
   provenance: AssetProvenance;

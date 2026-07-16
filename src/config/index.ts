@@ -1,8 +1,8 @@
 const STORAGE = {
   /** Versioned for schema compatibility */
   KEY_PREFIX: 'verantus@',
-  /** v2 invalidates pre-provenance cached payloads */
-  STOCK_CACHE_KEY: 'verantus@cached_stock_v2',
+  /** v3 invalidates payloads cached before the income-analysis block */
+  STOCK_CACHE_KEY: 'verantus@cached_stock_v3',
   THEME_KEY: 'verantus@theme'
 } as const;
 
