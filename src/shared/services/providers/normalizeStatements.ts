@@ -15,10 +15,23 @@ const DEFAULT_EFFECTIVE_TAX_RATE = 0.21;
 /** Upper bound on a derived tax rate, guarding against distorted single years. */
 const MAX_DERIVED_TAX_RATE = 0.6;
 
+/**
+ * This yfapi tier strips some reported figures to `{ raw: 0, fmt: null }` — a
+ * placeholder, not a real zero. A genuine zero carries a formatted string
+ * (`fmt: "0"`), so we treat a null `fmt` on a zero as unavailable to avoid
+ * showing fabricated $0 line items.
+ */
+const isStrippedPlaceholder = (wrapper: unknown): boolean => {
+  if (!wrapper || typeof wrapper !== 'object') return false;
+  const { raw, fmt } = wrapper as { raw?: unknown; fmt?: unknown };
+  return raw === 0 && (fmt === null || fmt === undefined);
+};
+
 /** Reads a statement line item, trying known Yahoo field aliases in order. */
 const readLineItem = (row: StatementRow | undefined, ...aliases: string[]): number | null => {
   if (!row) return null;
   for (const alias of aliases) {
+    if (isStrippedPlaceholder(row[alias])) continue;
     const value = getRaw(row[alias]);
     if (value !== null) return value;
   }

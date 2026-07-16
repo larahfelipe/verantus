@@ -30,7 +30,14 @@
         {{ section.title }}
       </h3>
 
-      <div class="overflow-x-auto">
+      <p
+        v-if="!sectionHasData(section)"
+        class="text-[11px] text-neutral-400 dark:text-neutral-500 italic py-1"
+      >
+        Not provided by the current data source.
+      </p>
+
+      <div v-else class="overflow-x-auto">
         <table class="w-full text-left text-xs border-collapse">
           <thead>
             <tr
@@ -139,6 +146,10 @@ const sections: StatementSection[] = [
 
 const formatMoney = (value: number | null): string =>
   formatCompactMoney(value, props.asset.profile.currency);
+
+/** A section the source returned entirely empty is flagged rather than shown as rows of "—". */
+const sectionHasData = (section: StatementSection): boolean =>
+  section.rows.some((row) => props.asset.financialsHistory.some((yr) => yr[row.field] !== null));
 
 const rowClass = (emphasis: RowEmphasis): string => {
   if (emphasis === 'strong') return 'font-bold bg-neutral-50/50 dark:bg-zinc-800/10';
