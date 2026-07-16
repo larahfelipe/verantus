@@ -25,7 +25,8 @@
     "chart.js": "^4.4.3",
     "pinia": "^3.0.4",
     "vue": "^3.4.27",
-    "vue-router": "^5.1.0"
+    "vue-router": "^5.1.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/node": "^20.12.12",

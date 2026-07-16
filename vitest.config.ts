@@ -34,6 +34,13 @@ export default defineConfig({
           branches: 50,
           functions: 100,
           lines: 90
+        },
+        'src/shared/services/errors.ts': { statements: 100, branches: 85, functions: 100, lines: 100 },
+        'src/shared/services/providers/yahooSchemas.ts': {
+          statements: 95,
+          branches: 90,
+          functions: 100,
+          lines: 95
         }
       }
     }

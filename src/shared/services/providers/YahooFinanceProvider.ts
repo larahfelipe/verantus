@@ -4,6 +4,7 @@ import config from '@/config';
 import { computeEvolutionStats } from '@/core/analysis';
 import { assembleAssetAnalysis } from '@/core/assembleAssetAnalysis';
 import api from '@/services/api';
+import { NotFoundError, UpstreamError } from '@/shared/services/errors';
 import type {
   AssetMetrics,
   AssetProfile,
@@ -15,6 +16,7 @@ import type { StockChart, StockData } from '@/types';
 import type { IFinancialDataProvider } from './IFinancialDataProvider';
 import { buildFinancialsHistory } from './normalizeStatements';
 import { getFmt, getRaw, normalizeYield } from './yahooParse';
+import { parseChart, parseQuoteSummary } from './yahooSchemas';
 
 type Row = Record<string, unknown>;
 
@@ -51,14 +53,16 @@ export class YahooFinanceProvider implements IFinancialDataProvider {
     const endpointUrl = `/v11/finance/quoteSummary/${qualifiedSymbol}?modules=${modules}`;
 
     const { data }: AxiosResponse<StockData> = await api.get(endpointUrl);
-    const { result, error } = data.quoteSummary;
+    const { result, error } = parseQuoteSummary(data).quoteSummary;
 
     if (error) {
-      throw new Error(error.code || 'Failed to fetch Yahoo Finance stock summary');
+      throw new UpstreamError(error.code || 'Failed to fetch Yahoo Finance stock summary.');
     }
 
     if (!result?.[0]) {
-      throw new Error('No stock summary returned from Yahoo Finance');
+      throw new NotFoundError(
+        `No stock summary returned from Yahoo Finance for ${qualifiedSymbol}.`
+      );
     }
 
     const rawData = result[0];
@@ -247,10 +251,10 @@ export class YahooFinanceProvider implements IFinancialDataProvider {
     const endpointUrl = `/v8/finance/chart/${qualifiedSymbol}?range=${range}&interval=${interval}`;
 
     const { data }: AxiosResponse<StockChart> = await api.get(endpointUrl);
-    const { result, error } = data.chart;
+    const { result, error } = parseChart(data).chart;
 
     if (error) {
-      throw new Error(error.code || 'Failed to fetch Yahoo Finance stock chart');
+      throw new UpstreamError(error.code || 'Failed to fetch Yahoo Finance stock chart.');
     }
 
     if (!result?.[0]) {
