@@ -68,3 +68,48 @@ export function mapTransportError(error: unknown): ProviderError {
 
   return new NetworkError(message || 'Unexpected data provider transport error.', error);
 }
+
+export interface UserFacingError {
+  kind: string;
+  message: string;
+  /** Whether retrying the same request could succeed (false for not-found/parse). */
+  retryable: boolean;
+}
+
+const USER_MESSAGES: Record<string, Omit<UserFacingError, 'kind'>> = {
+  network: {
+    message: 'Could not reach the data provider. Check your connection and try again.',
+    retryable: true
+  },
+  rate_limit: {
+    message: 'The data provider is rate-limiting requests. Please wait a moment and retry.',
+    retryable: true
+  },
+  not_found: {
+    message: 'No data was found for this symbol. Verify the ticker and try another.',
+    retryable: false
+  },
+  upstream: {
+    message: 'The data provider returned an error. Please try again shortly.',
+    retryable: true
+  },
+  parse: {
+    message: 'The data provider returned an unexpected response. Please try again shortly.',
+    retryable: false
+  }
+};
+
+/** Turns any thrown value into a stable kind plus a message safe to show a user. */
+export function describeError(error: unknown): UserFacingError {
+  if (error instanceof ProviderError) {
+    const entry = USER_MESSAGES[error.kind];
+    if (entry) return { kind: error.kind, ...entry };
+    return { kind: error.kind, message: error.message, retryable: true };
+  }
+
+  const message =
+    error instanceof Error
+      ? error.message
+      : 'An unexpected error occurred while fetching financial data.';
+  return { kind: 'unknown', message, retryable: true };
+}

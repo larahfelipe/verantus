@@ -72,6 +72,7 @@
       </p>
 
       <button
+        v-if="stockStore.errorRetryable"
         type="button"
         class="mt-6 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all"
         @click="retryFetch"

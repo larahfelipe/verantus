@@ -7,6 +7,7 @@ import {
   ProviderError,
   RateLimitError,
   UpstreamError,
+  describeError,
   mapTransportError
 } from './errors';
 
@@ -54,5 +55,44 @@ describe('mapTransportError', () => {
   it('produces errors that are instances of the ProviderError base', () => {
     expect(new NetworkError('x')).toBeInstanceOf(ProviderError);
     expect(new NetworkError('x')).toBeInstanceOf(Error);
+  });
+});
+
+describe('describeError', () => {
+  it('marks not-found and parse errors as non-retryable', () => {
+    expect(describeError(new NotFoundError('x')).retryable).toBe(false);
+    expect(describeError(new DataParseError('x')).retryable).toBe(false);
+  });
+
+  it('marks transient errors (network, rate limit, upstream) as retryable', () => {
+    expect(describeError(new NetworkError('x')).retryable).toBe(true);
+    expect(describeError(new RateLimitError('x')).retryable).toBe(true);
+    expect(describeError(new UpstreamError('x')).retryable).toBe(true);
+  });
+
+  it('returns the kind and a user-safe message for a typed error', () => {
+    const described = describeError(new NotFoundError('raw internal detail'));
+    expect(described.kind).toBe('not_found');
+    expect(described.message).not.toContain('raw internal detail');
+  });
+
+  it('falls back to a generic, retryable descriptor for unknown errors', () => {
+    expect(describeError(new Error('boom'))).toEqual({
+      kind: 'unknown',
+      message: 'boom',
+      retryable: true
+    });
+    expect(describeError('weird').kind).toBe('unknown');
+  });
+
+  it('passes through a typed error whose kind has no mapped message', () => {
+    class CustomProviderError extends ProviderError {
+      readonly kind = 'custom';
+    }
+    expect(describeError(new CustomProviderError('detail'))).toEqual({
+      kind: 'custom',
+      message: 'detail',
+      retryable: true
+    });
   });
 });

@@ -14,7 +14,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text-summary', 'text'],
-      include: ['src/core/**/*.ts', 'src/shared/**/*.ts'],
+      include: ['src/core/**/*.ts', 'src/shared/**/*.ts', 'src/stores/**/*.ts'],
       exclude: ['src/**/*.test.ts', 'src/**/*.d.ts', 'src/shared/services/providers/__fixtures__/**'],
       // Thresholds are scoped to the critical calculation core, not a global percentage:
       // the financial engine must stay covered; presentational code is not gated here.
@@ -41,7 +41,8 @@ export default defineConfig({
           branches: 90,
           functions: 100,
           lines: 95
-        }
+        },
+        'src/stores/stockStore.ts': { statements: 85, branches: 65, functions: 85, lines: 85 }
       }
     }
   }

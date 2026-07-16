@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import { defineStore } from 'pinia';
 
 import config from '@/config';
+import { describeError } from '@/shared/services/errors';
 import { financialRepository } from '@/shared/services/providers/FinancialDataRepository';
 import type { NormalizedAsset } from '@/shared/types/domain';
 
@@ -62,6 +63,8 @@ export const useStockStore = defineStore('stock', () => {
   const currentAsset = ref<NormalizedAsset | null>(null);
   const isLoading = ref<boolean>(false);
   const error = ref<string | null>(null);
+  const errorKind = ref<string | null>(null);
+  const errorRetryable = ref<boolean>(true);
   const cachedAt = ref<number | null>(null);
 
   function initializeFromCache(): void {
@@ -115,6 +118,8 @@ export const useStockStore = defineStore('stock', () => {
     try {
       isLoading.value = true;
       error.value = null;
+      errorKind.value = null;
+      errorRetryable.value = true;
 
       const asset = await financialRepository.getAsset(targetSymbol, targetExchange, targetRange);
       currentAsset.value = asset;
@@ -124,9 +129,10 @@ export const useStockStore = defineStore('stock', () => {
       const cacheData: CachedStockData = { ts: now, asset };
       localStorage.setItem(config.STORAGE.STOCK_CACHE_KEY, JSON.stringify(cacheData));
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'An error occurred while fetching financial data.';
-      error.value = message;
+      const described = describeError(err);
+      error.value = described.message;
+      errorKind.value = described.kind;
+      errorRetryable.value = described.retryable;
       currentAsset.value = null;
     } finally {
       isLoading.value = false;
@@ -151,6 +157,8 @@ export const useStockStore = defineStore('stock', () => {
     cachedAt,
     isLoading,
     error,
+    errorKind,
+    errorRetryable,
     fetchStock,
     changeRange
   };
