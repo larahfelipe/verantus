@@ -1,6 +1,8 @@
 import type { AxiosResponse } from 'axios';
 
 import config from '@/config';
+import { computeEvolutionStats } from '@/core/analysis';
+import { assembleAssetAnalysis } from '@/core/assembleAssetAnalysis';
 import api from '@/services/api';
 import type {
   AssetMetrics,
@@ -8,20 +10,10 @@ import type {
   HistoricalPoint,
   NormalizedAsset
 } from '@/shared/types/domain';
-import { computeQuantitativeScores } from '@/shared/utils/scoring';
 import type { StockChart, StockData } from '@/types';
 
-import {
-  buildFinancialsHistory,
-  computeEvolutionStats,
-  computeValuationModel,
-  deriveCapitalAllocation,
-  deriveMoat,
-  deriveResearch,
-  deriveRisks,
-  deriveThesis
-} from './deriveAnalysis';
 import type { IFinancialDataProvider } from './IFinancialDataProvider';
+import { buildFinancialsHistory } from './normalizeStatements';
 import { getFmt, getRaw, normalizeYield } from './yahooParse';
 
 type Row = Record<string, unknown>;
@@ -224,49 +216,23 @@ export class YahooFinanceProvider implements IFinancialDataProvider {
       dividends
     };
 
-    const scores = computeQuantitativeScores(metrics, profile);
-
-    const valuationModel = computeValuationModel(
+    const analysis = assembleAssetAnalysis({
+      profile,
+      metrics,
+      financialsHistory,
       currentPrice,
       freeCashFlow,
       sharesOutstanding,
-      growth.revenueGrowth3Yr ?? growth.quarterlyRevenueGrowth,
-      getRaw(summaryDetail.beta)
-    );
-    const moat = deriveMoat(metrics);
-    const capitalAllocation = deriveCapitalAllocation(metrics, financialsHistory);
-    const risks = deriveRisks(metrics, { valuation: scores.valuation.score });
-    const thesis = deriveThesis(
-      metrics,
-      {
-        businessQuality: scores.businessQuality.score,
-        growth: scores.growth.score,
-        financialHealth: scores.financialHealth.score,
-        valuation: scores.valuation.score
-      },
-      valuationModel,
-      moat,
-      capitalAllocation,
-      risks,
-      currentPrice ?? 0
-    );
-    const research = deriveResearch(profile, financialData.recommendationKey || '');
+      beta: getRaw(summaryDetail.beta),
+      recommendationKey: financialData.recommendationKey || ''
+    });
 
     return {
       profile,
       metrics,
-      scores,
       financialsHistory,
       evolutionStats,
-      thesis,
-      research,
-      provenance: {
-        fundamentals: 'live',
-        financials: 'live',
-        valuationModel: 'derived',
-        thesis: 'derived',
-        research: 'live'
-      }
+      ...analysis
     };
   }
 

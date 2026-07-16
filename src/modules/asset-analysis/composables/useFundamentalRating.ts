@@ -1,7 +1,7 @@
 import { computed, toValue, type MaybeRefOrGetter } from 'vue';
 
+import { computeFundamentalHealthIndex } from '@/core/scoring';
 import type { NormalizedAsset, ScoreComponent } from '@/shared/types/domain';
-import { computeFundamentalHealthIndex } from '@/shared/utils/scoring';
 
 import {
   assessmentText,

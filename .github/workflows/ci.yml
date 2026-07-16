@@ -37,6 +37,9 @@ jobs:
       - name: Type check
         run: yarn typecheck
 
+      - name: Test (with coverage thresholds)
+        run: yarn test:coverage
+
       - name: Build project
         run: yarn build
 

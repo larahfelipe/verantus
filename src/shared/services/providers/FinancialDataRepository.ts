@@ -1,6 +1,7 @@
 import config from '@/config';
 import type { HistoricalPoint, NormalizedAsset } from '@/shared/types/domain';
 
+import type { IFinancialDataProvider } from './IFinancialDataProvider';
 import { YahooFinanceProvider } from './YahooFinanceProvider';
 
 /** Trading days used to approximate calendar windows on a daily close series. */
@@ -9,7 +10,7 @@ const TRADING_DAYS_1M = 22;
 const TRADING_DAYS_1Y = 252;
 
 export class FinancialDataRepository {
-  private provider = new YahooFinanceProvider();
+  constructor(private readonly provider: IFinancialDataProvider = new YahooFinanceProvider()) {}
 
   private applyRangeReturns(profile: NormalizedAsset['profile'], history: HistoricalPoint[]): void {
     if (history.length <= 1) return;
