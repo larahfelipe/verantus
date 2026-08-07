@@ -71,9 +71,9 @@
             <td
               v-for="(value, index) in row.values"
               :key="index"
-              class="text-right font-bold text-neutral-800 dark:text-neutral-200 py-2 px-3 tabular-nums"
+              class="text-right font-bold text-neutral-800 dark:text-neutral-200 py-2 px-3"
             >
-              {{ value }}
+              <DataPoint :value="value" :format="row.format" :currency="asset.profile.currency" />
             </td>
           </tr>
         </tbody>
@@ -85,10 +85,9 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
+import DataPoint from '@/shared/components/ui/DataPoint.vue';
 import DataQualityBadge from '@/shared/components/ui/DataQualityBadge.vue';
 import type { MetricTrend, NormalizedAsset } from '@/shared/types/domain';
-import { formatCompactMoney } from '@/shared/utils/formatMoney';
-import { formatPercent } from '@/shared/utils/formatPercent';
 
 const props = defineProps<{
   asset: NormalizedAsset | null;
@@ -101,11 +100,10 @@ const netMarginTrend = computed<MetricTrend>(
 
 const rows = computed(() => {
   const ys = years.value;
-  const currency = props.asset?.profile.currency ?? 'USD';
   return [
-    { label: 'Revenue', values: ys.map((y) => formatCompactMoney(y.revenue, currency)) },
-    { label: 'Net Income', values: ys.map((y) => formatCompactMoney(y.netIncome, currency)) },
-    { label: 'Net Margin', values: ys.map((y) => formatPercent(y.netMargin)) }
+    { label: 'Revenue', format: 'money' as const, values: ys.map((y) => y.revenue) },
+    { label: 'Net Income', format: 'money' as const, values: ys.map((y) => y.netIncome) },
+    { label: 'Net Margin', format: 'percent' as const, values: ys.map((y) => y.netMargin) }
   ];
 });
 
